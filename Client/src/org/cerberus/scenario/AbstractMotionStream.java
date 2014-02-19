@@ -1,7 +1,7 @@
 package org.cerberus.scenario;
 
-public interface AbstractMotionStream<DATA_TYPE> {
+public interface AbstractMotionStream {
 
-	public void sendData(DATA_TYPE data);
+	public void sendData(MotionVO data);
 	
 }

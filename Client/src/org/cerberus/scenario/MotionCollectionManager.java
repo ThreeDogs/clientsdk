@@ -1,9 +1,24 @@
 package org.cerberus.scenario;
 
-public class MotionCollectionManager<DATA_TYPE> {
+public class MotionCollectionManager {
 
-	public void putMotion(DATA_TYPE motionData) {
-		
+	private static Integer count = 0;
+	private Long lastSleepTime;
+	private AbstractMotionStream stream;
+	
+	public MotionCollectionManager(AbstractMotionStream stream) {
+		this.stream = stream;
+	}
+	
+	public void putMotion(MotionVO motionData) {
+		if(lastSleepTime == null) {
+			lastSleepTime = System.currentTimeMillis();
+		} else {
+			motionData.setSleep(System.currentTimeMillis() - lastSleepTime);
+			lastSleepTime = System.currentTimeMillis();
+		}
+		motionData.setId(count++);
+		stream.sendData(motionData);
 	}
 	
 }
