@@ -3,6 +3,7 @@ package test.org.cerberus.scenario;
 import java.util.Arrays;
 
 import org.ow2.asmdex.ClassVisitor;
+import org.ow2.asmdex.FieldVisitor;
 import org.ow2.asmdex.MethodVisitor;
 
 public class ClassAdapterAnnotateCalls extends ClassVisitor {
@@ -27,6 +28,16 @@ public class ClassAdapterAnnotateCalls extends ClassVisitor {
 		MethodAdapterAnnotateCalls ma = new MethodAdapterAnnotateCalls(api, mv);
 		
 		return ma;
+	}
+
+	@Override
+	public FieldVisitor visitField(int access, String name, String desc,
+			String[] signature, Object value) {
+		
+		FieldVisitor fv = cv.visitField(access, name, desc, signature, value);
+		FieldAdapterAnnotateCalls fa = new FieldAdapterAnnotateCalls(api, fv);
+		
+		return fa;
 	}
 
 	

@@ -24,10 +24,11 @@ public class ASMTest {
 		ar.accept(aa, 0);
 		
 		byte[] b = aw.toByteArray();
-		FileOutputStream os = new FileOutputStream(new File("result.dex"));
+		FileOutputStream os = new FileOutputStream(new File("classes.dex"));
 		os.write(b);
 		
-		
+		os.flush();
+		os.close();
 	}
 	
 }

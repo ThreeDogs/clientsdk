@@ -43,10 +43,16 @@
 		-Dversion=1.0 -->
 <!--     AsmDex -->
 <!-- 	AsmDex not support maven -->
+<!--     <dependency> -->
+<!-- 		<groupId>org.asm.asmdex</groupId> -->
+<!-- 		<artifactId>asmdex</artifactId> -->
+<!-- 		<version>1.0</version> -->
+<!-- 	</dependency> -->
+    
     <dependency>
-		<groupId>org.asm.asmdex</groupId>
-		<artifactId>asmdex</artifactId>
-		<version>1.0</version>
+		<groupId>org.ow2.asm</groupId>
+		<artifactId>asm-all</artifactId>
+		<version>4.0</version>
 	</dependency>
     
   </dependencies>

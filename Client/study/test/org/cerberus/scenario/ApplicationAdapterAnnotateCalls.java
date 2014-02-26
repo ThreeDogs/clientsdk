@@ -16,16 +16,19 @@ public class ApplicationAdapterAnnotateCalls extends ApplicationVisitor {
 	@Override
 	public ClassVisitor visitClass(int access, String name, String[] signature,
 			String superName, String[] interfaces) {
-		// TODO Auto-generated method stub
+
+//		if(name.startsWith("Lcom/autoschedule")){
 		
-		System.out.println("---------ApplicationAdapterAnnotateCalls visitClass Start-------");
-		System.out.println("access : " + access);
+//		System.out.println("---------ApplicationAdapterAnnotateCalls visitClass Start-------");
+//		System.out.println("access : " + access);
 		System.out.println("name : " + name);
-		System.out.println("signature : " + Arrays.toString(signature));
-		System.out.println("superName : " + superName);
-		System.out.println("interfaces : " + Arrays.toString(interfaces));
-		System.out.println("---------ApplicationAdapterAnnotateCalls VisitClass End-------");
-//		
+//		System.out.println("signature : " + Arrays.toString(signature));
+		
+//		if(!superName.startsWith("Ljava/lang/Object"))
+//		System.out.println("	superName : " + superName);
+//		System.out.println("interfaces : " + Arrays.toString(interfaces));
+//		System.out.println("---------ApplicationAdapterAnnotateCalls VisitClass End-------");
+//		}
 		ClassVisitor cv = av.visitClass(access, name, signature, superName, interfaces);
 		ClassAdapterAnnotateCalls ca = new ClassAdapterAnnotateCalls(api, cv);
 		return ca;
@@ -34,7 +37,7 @@ public class ApplicationAdapterAnnotateCalls extends ApplicationVisitor {
 	@Override
 	public void visitEnd() {
 		// TODO Auto-generated method stub
-		System.out.println("ApplicationAdapterAnnotateCalls visitEnd called...");
+//		System.out.println("ApplicationAdapterAnnotateCalls visitEnd called...");
 		super.visitEnd();
 	}
 
