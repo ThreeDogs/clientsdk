@@ -3,18 +3,16 @@ package test.org.cerberus.jarasm;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.AdviceAdapter;
 
-public class MotionEventCollectAdviceAdapter extends AdviceAdapter{
+public class DispatchKeyEventAdviceAdapter extends AdviceAdapter {
 
 	private String log;
 	
-	protected MotionEventCollectAdviceAdapter(int api, MethodVisitor mv,
+	protected DispatchKeyEventAdviceAdapter(int api, MethodVisitor mv,
 			int access, String name, String desc, String log) {
 		super(api, mv, access, name, desc);
-		System.out.println(api + " " + mv + " " + access + " " + name + " " + desc);
 		this.log = log;
 	}
 
-	
 	@Override
 	protected void onMethodEnter() {
 		System.out.println("onMehtodEnter");
@@ -25,18 +23,15 @@ public class MotionEventCollectAdviceAdapter extends AdviceAdapter{
 				"android/util/Log",
 				"i", "(Ljava/lang/String;Ljava/lang/String;)I");
 //		mv.visitEnd();
-		
 		mv.visitMethodInsn(INVOKESTATIC,
 				"org/cerberus/profile/memory/MemoryDump",
 				"getMemoryTrace", "()V");
-		
 		
 		super.onMethodEnter();
 	}
 	
 	@Override
 	protected void onMethodExit(int opcode) {
-		System.out.println("onMethodExit - " + opcode);
 		
 		if(opcode == ATHROW) {
 			super.onMethodExit(opcode);
@@ -51,13 +46,12 @@ public class MotionEventCollectAdviceAdapter extends AdviceAdapter{
 				"i", "(Ljava/lang/String;Ljava/lang/String;)I");
 		
 //		mv.visitEnd();
-		
 		mv.visitMethodInsn(INVOKESTATIC,
 				"org/cerberus/profile/memory/MemoryDump",
 				"getMemoryTrace", "()V");
 		
-		
 		super.onMethodExit(opcode);
 	}
 
+	
 }
