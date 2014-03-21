@@ -7,6 +7,11 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 
+import test.org.cerberus.jarasm.ActivityAdviceAdapter;
+import test.org.cerberus.jarasm.DefaultAdviceAdapter;
+import test.org.cerberus.jarasm.DispatchKeyEventAdviceAdapter;
+import test.org.cerberus.jarasm.MotionEventCollectAdviceAdapter;
+
 public class CustomClassNode extends ClassNode {
 
 	
@@ -49,7 +54,6 @@ public class CustomClassNode extends ClassNode {
 		if( 0<desc.indexOf("Landroid/view/View" ) && name.equals("onClick") && interfaces != null) {
 			for(int i = 0 ; i < this.interfaces.length; i++) {
 				if(interfaces[i].equals("android/view/View$OnClickListener")) {
-					System.out.println(".....");
 					MotionEventCollectAdviceAdapter motionEventCollectAdviceAdapter = new MotionEventCollectAdviceAdapter(Opcodes.ASM4, mv, access, name, desc,"OnClickListener onClick");
 					return motionEventCollectAdviceAdapter;		
 				} 
@@ -59,7 +63,6 @@ public class CustomClassNode extends ClassNode {
 		if( 0<desc.indexOf("Landroid/view/View" ) && name.equals("onItemClick") && interfaces != null) {
 			for(int i = 0 ; i < this.interfaces.length; i++) {
 				if(interfaces[i].equals("android/widget/AdapterView$OnItemClickListener")) {
-					System.out.println(".....");
 					MotionEventCollectAdviceAdapter motionEventCollectAdviceAdapter = new MotionEventCollectAdviceAdapter(Opcodes.ASM4, mv, access, name, desc ,"OnItemClickListner onItemClick");
 					return motionEventCollectAdviceAdapter;		
 				} 
@@ -71,13 +74,13 @@ public class CustomClassNode extends ClassNode {
 			
 			for(int i = 0 ; i < this.interfaces.length; i++) {
 				if(0<interfaces[i].indexOf("OnActionModeFinishedListener")) {
-					System.out.println(".....");
-					MotionEventCollectAdviceAdapter motionEventCollectAdviceAdapter = new MotionEventCollectAdviceAdapter(Opcodes.ASM4, mv, access, name, desc, "OnActionModeFinishedListener onMenuItemSelected");
-					return motionEventCollectAdviceAdapter;		
+//					MotionEventCollectAdviceAdapter motionEventCollectAdviceAdapter = new MotionEventCollectAdviceAdapter(Opcodes.ASM4, mv, access, name, desc, "OnActionModeFinishedListener onMenuItemSelected");
+//					return motionEventCollectAdviceAdapter;
+					
+					break;
 				} 
 			}
 		} else if (name.equals("onMenuItemSelected")) {
-			System.out.println(".....");
 			MotionEventCollectAdviceAdapter motionEventCollectAdviceAdapter = new MotionEventCollectAdviceAdapter(Opcodes.ASM4, mv, access, name, desc, "Activity onMenuItemSelected");
 			return motionEventCollectAdviceAdapter;		
 		}
@@ -92,6 +95,11 @@ public class CustomClassNode extends ClassNode {
 		}
 		
 		else {
+			System.out.println(name);
+			System.out.println(name.indexOf("init"));
+			if(name.indexOf("init") < 0)
+				return new DefaultAdviceAdapter(Opcodes.ASM4, mv, access, name, desc);
+
 			return mv;
 		}
 		

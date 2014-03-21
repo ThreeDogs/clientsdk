@@ -18,7 +18,7 @@ public class MotionEventCollectAdviceAdapter extends AdviceAdapter{
 	@Override
 	protected void onMethodEnter() {
 		System.out.println("onMehtodEnter");
-		
+		CpuTraceWriter.StartWrite(mv);
 		mv.visitLdcInsn("Cerberus");
 		mv.visitLdcInsn("Start " + log);
 		mv.visitMethodInsn(INVOKESTATIC,
@@ -31,6 +31,45 @@ public class MotionEventCollectAdviceAdapter extends AdviceAdapter{
 				"getMemoryTrace", "()V");
 		
 		
+		//-----------------
+		
+		mv.visitMethodInsn(INVOKESTATIC,
+				"org/cerberus/event/collection/MotionCollector",
+				"getInstance",
+				"()Lorg/cerberus/scenario/MotionCollectionManager;");
+		mv.visitTypeInsn(NEW, "org/cerberus/scenario/MotionVO");
+		mv.visitInsn(DUP);
+		mv.visitMethodInsn(INVOKESTATIC, "java/lang/System",
+				"currentTimeMillis", "()J");
+		mv.visitMethodInsn(INVOKESTATIC, "java/lang/Long", "valueOf",
+				"(J)Ljava/lang/Long;");
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Object", "getClass",
+				"()Ljava/lang/Class;");
+		mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getName",
+				"()Ljava/lang/String;");
+		mv.visitLdcInsn("Click");
+		mv.visitLdcInsn("");
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitMethodInsn(INVOKEVIRTUAL, "android/view/View",
+				"getResources", "()Landroid/content/res/Resources;");
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitMethodInsn(INVOKEVIRTUAL, "android/view/View", "getId",
+				"()I");
+		mv.visitMethodInsn(INVOKEVIRTUAL, "android/content/res/Resources",
+				"getResourceEntryName", "(I)Ljava/lang/String;");
+		mv.visitMethodInsn(
+				INVOKESPECIAL,
+				"org/cerberus/scenario/MotionVO",
+				"<init>",
+				"(Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+		mv.visitMethodInsn(INVOKEVIRTUAL,
+				"org/cerberus/scenario/MotionCollectionManager",
+				"putMotion", "(Lorg/cerberus/scenario/MotionVO;)V");
+		
+		
+		
+		
 		super.onMethodEnter();
 	}
 	
@@ -38,7 +77,7 @@ public class MotionEventCollectAdviceAdapter extends AdviceAdapter{
 	protected void onMethodExit(int opcode) {
 		System.out.println("onMethodExit - " + opcode);
 		
-		if(opcode == ATHROW) {
+		if(opcode == ATHROW || opcode == ARETURN || opcode == RETURN || opcode == IRETURN) {
 			super.onMethodExit(opcode);
 			return;
 		}
@@ -56,6 +95,8 @@ public class MotionEventCollectAdviceAdapter extends AdviceAdapter{
 				"org/cerberus/profile/memory/MemoryDump",
 				"getMemoryTrace", "()V");
 		
+
+		CpuTraceWriter.EndWrite(mv);
 		
 		super.onMethodExit(opcode);
 	}
