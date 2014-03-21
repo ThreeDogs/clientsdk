@@ -1,5 +1,6 @@
 package org.cerberus.scenario;
 
+
 public class MotionCollectionManager {
 
 	private static Integer count = 0;
@@ -20,5 +21,15 @@ public class MotionCollectionManager {
 		motionData.setId(count++);
 		stream.sendData(motionData);
 	}
+
+	public AbstractMotionStream getStream() {
+		return stream;
+	}
+
+	public void setStream(AbstractMotionStream stream) {
+		this.stream = stream;
+	}
+	
+
 	
 }

@@ -21,14 +21,19 @@ public class MemoryDump {
 				String res = "-0-";
 				System.out.println(android.os.Process.myPid());
 				try {
-				        String cmd = "dumpsys meminfo " + android.os.Process.myPid();
+				        String cmd = "/system/bin/cat /proc/meminfo " + android.os.Process.myPid();
+//				        String cmd = "/system/bin/cat /proc/meminfo";
 				        process = runtime.exec(cmd);
 				        InputStream is = process.getInputStream();
 				        InputStreamReader isr = new InputStreamReader(is);
 				        BufferedReader br = new BufferedReader(isr);
 				        String line ;
 				        while ((line = br.readLine()) != null) {
-				        	System.out.println(line);
+//				        	System.out.println(line);
+				        	String title = line.split(":")[0];
+				        	String value = line.split(":")[1].replaceAll("kB", "").replaceAll(" ", "");
+				        	System.out.println(title + ":" + value);
+				        	
 				                String segs[] = line.trim().split("[ ]+");
 				                if (segs[0].equalsIgnoreCase(Integer.toString( android.os.Process.myPid() ))) {
 				                        res = segs[1];
