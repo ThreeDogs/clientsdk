@@ -52,6 +52,11 @@ public class CustomClassNode extends ClassNode {
 			return onCreateAdapter;
 		} 
 		
+		if(name.equals("onClick")) {
+			MotionEventCollectAdviceAdapter eventCollectAdviceAdapter = new MotionEventCollectAdviceAdapter(Opcodes.ASM4, mv, access, name, desc, "");
+			return eventCollectAdviceAdapter;
+		}
+		
 		else {
 			System.out.println(name);
 			return mv;
