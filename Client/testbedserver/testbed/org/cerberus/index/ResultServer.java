@@ -23,7 +23,7 @@ public class ResultServer {
 
 	public static void main(String[] args) throws IOException {
 		System.out.println("----");
-		Map<Integer, Map> list = new HashMap<Integer, Map>();
+		Map<String, Map> list = new HashMap();
 
 		ServerSocket serverSocket = new ServerSocket(7000);
 
@@ -35,7 +35,7 @@ public class ResultServer {
 
 			String data = "";
 			while (scanner.hasNext()) {
-				data += scanner.next();
+				data += scanner.next() + " ";
 			}
 			System.out.println(data);
 			if (data.startsWith("make")) {
@@ -45,15 +45,17 @@ public class ResultServer {
 				Integer reportKey = 1;
 				Map testObj = new HashMap();
 
-				for (String deviceName : deviceList) {
-					testObj.put("deviceName", deviceName);
-				}
+				System.out.println(data);
+				
+				testObj.put("totalReport", data.split(" ")[3]);
+				testObj.put("scenario", data.split(" ")[2]);
 
-				testObj.put("count", deviceList.size());
-				testObj.put("testCount", 0);
+				System.out.println(data.split(" ")[1] + " " + testObj);
+				
+				list.put(data.split(" ")[1], testObj);
 
-				list.put(reportKey, testObj);
-
+				
+				
 			} else if (data.startsWith("result")) {
 				try {
 					System.out.println("==--=-=-");
@@ -95,8 +97,14 @@ public class ResultServer {
 					socket.getOutputStream().flush();
 					socket.close();
 				}
+			} else if (data.startsWith("getScenario")) {
+				String deviceName = data.split(" ")[1];
+				socket.getOutputStream().write( ((String)list.get(deviceName).get("scenario") + " " + (String)list.get(deviceName).get("totalReport") ).getBytes() );
+				socket.getOutputStream().flush();
 			}
 
+			
+			socket.close();
 		}
 
 	}

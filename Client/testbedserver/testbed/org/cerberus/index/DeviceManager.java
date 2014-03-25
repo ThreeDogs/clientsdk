@@ -45,7 +45,7 @@ public class DeviceManager extends Thread {
 
 	}
 
-	public static synchronized void doCommand(String command) {
+	public static  void doCommand(final String command) {
 		String commandName = command.split(" ")[0];
 
 		if (commandName.equals("add")) {
@@ -172,27 +172,34 @@ public class DeviceManager extends Thread {
 			}
 		} else if (commandName.startsWith("startTest")) {
 			//./adb shell am instrument -w -e class org.cerberus.test.CerberusTestRunner#testRun com.example.testandroid/android.test.InstrumentationTestRunner
-			System.out.println("---");
-			try {
-				String deviceName = command.split(" ")[1];
+			new Runnable() {
+				
+				@Override
+				public void run() {
+					System.out.println("---");
+					try {
+						String deviceName = command.split(" ")[1];
 
-				Runtime runtime = Runtime.getRuntime();
-				Process process;
-				String cmd = adbPath + " -s " + deviceName + " shell am instrument -w -e class org.cerberus.test.CerberusTestRunner#testRun com.example.testandroid/android.test.InstrumentationTestRunner";
-				System.out.println(cmd);
-				process = runtime.exec(cmd);
-				process.waitFor();
-				InputStream is = process.getInputStream();
-				InputStreamReader isr = new InputStreamReader(is);
-				BufferedReader br = new BufferedReader(isr);
-				String line;
-				while ((line = br.readLine()) != null) {
-					System.out.println(line);
+						Runtime runtime = Runtime.getRuntime();
+						Process process;
+						String cmd = adbPath + " -s " + deviceName + " shell am instrument -w -e class org.cerberus.test.CerberusTestRunner#testRun com.example.testandroid/android.test.InstrumentationTestRunner";
+						System.out.println(cmd);
+						process = runtime.exec(cmd);
+//						process.waitFor();
+						InputStream is = process.getInputStream();
+						InputStreamReader isr = new InputStreamReader(is);
+						BufferedReader br = new BufferedReader(isr);
+						String line;
+						while ((line = br.readLine()) != null) {
+							System.out.println(line);
+						}
+
+					} catch (Exception e) {
+
+					}					
 				}
-
-			} catch (Exception e) {
-
-			}
+			}.run();
+			
 		}
 	}
 	
