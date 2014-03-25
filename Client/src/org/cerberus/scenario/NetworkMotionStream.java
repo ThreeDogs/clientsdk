@@ -26,12 +26,28 @@ public class NetworkMotionStream implements AbstractMotionStream {
 	
 	@Override
 	public void sendData(MotionVO data) {
-
+		System.out.println(data + ".add");
 		motionList.add(data);
 		
 	}
+	
+	
+
+	public List<MotionVO> getMotionList() {
+		return motionList;
+	}
+
+
+
+	public void setMotionList(List<MotionVO> motionList) {
+		this.motionList = motionList;
+	}
+
+
 
 	public void sendNetworkData() {
+		
+		System.out.println("network Send......." + motionList.toString() );
 		
 		new AsyncTask() {
 
@@ -72,8 +88,10 @@ public class NetworkMotionStream implements AbstractMotionStream {
 				return null;
 			}
 			
-		}.execute(null);
-		
+		};
+//		.execute(null)
 	}
+	
+	
 	
 }

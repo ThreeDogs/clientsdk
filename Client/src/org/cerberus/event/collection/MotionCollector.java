@@ -1,7 +1,7 @@
 package org.cerberus.event.collection;
 
-import org.cerberus.scenario.LogMotionStream;
 import org.cerberus.scenario.MotionCollectionManager;
+import org.cerberus.scenario.NetworkMotionStream;
 
 public class MotionCollector {
 
@@ -13,8 +13,9 @@ public class MotionCollector {
 	}
 	
 	public static MotionCollectionManager getInstance() {
+		System.out.println("====");
 		if(motionCollectionManager == null)
-			motionCollectionManager = new MotionCollectionManager(new LogMotionStream());
+			motionCollectionManager = new MotionCollectionManager(new NetworkMotionStream());
 		
 		return motionCollectionManager;
 	}

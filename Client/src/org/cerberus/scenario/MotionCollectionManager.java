@@ -12,6 +12,7 @@ public class MotionCollectionManager {
 	}
 	
 	public void putMotion(MotionVO motionData) {
+		System.out.println(motionData);
 		if(lastSleepTime == null) {
 			lastSleepTime = System.currentTimeMillis();
 		} else {
@@ -20,6 +21,7 @@ public class MotionCollectionManager {
 		}
 		motionData.setId(count++);
 		stream.sendData(motionData);
+		System.out.println(stream);
 	}
 
 	public AbstractMotionStream getStream() {

@@ -1,6 +1,8 @@
 package org.cerberus.index;
 
-import android.app.Activity;
+import org.cerberus.event.collection.MotionCollector;
+import org.cerberus.scenario.NetworkMotionStream;
+
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.view.Gravity;
@@ -10,8 +12,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class CerberusAPI {
@@ -28,10 +28,12 @@ public class CerberusAPI {
 	
 	public void start() {
 		
+		System.out.println("------------------------");
+		
 		if(STATUS == STATUS_START) {
 			return;
 		}
-		
+		System.out.println("------------------------");
 		Button widgetBtn = new Button(c);
 		widgetBtn.setHeight(50);
 		widgetBtn.setWidth(50);
@@ -49,27 +51,37 @@ public class CerberusAPI {
 			@Override
 			public void onClick(View arg0) {
 
-				Toast.makeText(c, "Start scenario recording...", Toast.LENGTH_LONG).show();
+				
+				if(status == STATUS_RUNNING) {
+					status = STATUS_FINISH;
+					
+					//send Network
+					((NetworkMotionStream)MotionCollector.getInstance().getStream()).sendNetworkData();
+					System.out.println("--"   );
+				} else {
+					status = STATUS_RUNNING;
+					Toast.makeText(c, "Start scenario recording...", Toast.LENGTH_LONG).show();
+				}
 				
 			}
 		});
 		
-		widgetBtn.setOnTouchListener(new OnTouchListener() {
-			
-			@Override
-			public boolean onTouch(View v, MotionEvent motionEvent) {
-
-				System.out.println(v + " " + motionEvent);
-				
-//				Toast.makeText(c, "Start scenario recording...", Toast.LENGTH_LONG).show();
-				
-				Toast toast = Toast.makeText(c.getApplicationContext(),	"Start scenario recording..." , Toast.LENGTH_LONG);
-				toast.setGravity(Gravity.CENTER, 0, 0);
-				toast.show();
-				
-				return false;
-			}
-		});
+//		widgetBtn.setOnTouchListener(new OnTouchListener() {
+//			
+//			@Override
+//			public boolean onTouch(View v, MotionEvent motionEvent) {
+//
+////				System.out.println(v + " " + motionEvent);
+//				
+////				Toast.makeText(c, "Start scenario recording...", Toast.LENGTH_LONG).show();
+//				
+//				Toast toast = Toast.makeText(c.getApplicationContext(),	"Start scenario recording..." , Toast.LENGTH_LONG);
+//				toast.setGravity(Gravity.CENTER, 0, 0);
+//				toast.show();
+//				
+//				return false;
+//			}
+//		});
 		
 		STATUS = STATUS_START;
 		
