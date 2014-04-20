@@ -13,11 +13,9 @@ import java.util.Scanner;
 public class DeviceManager extends Thread {
 
 	private static final String adbPath = "/Users/RhoSunghyun/Documents/dev/adt-bundle-mac-x86_64-20130729/sdk/platform-tools/adb";
-	
+
 	private static List<Map> deviceList = new ArrayList();
-	
-	
-	
+
 	public static List<Map> getDeviceList() {
 		return deviceList;
 	}
@@ -45,84 +43,116 @@ public class DeviceManager extends Thread {
 
 	}
 
-	public static  void doCommand(final String command) {
+	public static void doCommand(final String command) {
 		String commandName = command.split(" ")[0];
 
 		if (commandName.equals("add")) {
 
-			String deviceName = command.split(" ")[1];
-
-			Map dataMap = new HashMap<String, String>();
-
-			dataMap.put("deviceName", deviceName);
-
-			// deviceList.add(deviceName);
-
-			{
+			String paramDeviceName = command.split(" ")[1];
+			List<String> addDeviceList = new ArrayList<String>();
+			if (paramDeviceName.equals("All")) {
 				try {
 					Runtime runtime = Runtime.getRuntime();
 					Process process;
-					String cmd = adbPath + " -s " + deviceName
-							+ " shell getprop ro.build.version.release";
+					String cmd = adbPath + " devices";
 					process = runtime.exec(cmd);
+					process.waitFor();
 					InputStream is = process.getInputStream();
 					InputStreamReader isr = new InputStreamReader(is);
 					BufferedReader br = new BufferedReader(isr);
 					String line;
 					while ((line = br.readLine()) != null) {
-						// System.out.println(line);
-						dataMap.put("os", line);
-					}
-				} catch (Exception e) {
 
-				}
-			}
-			{
-				try {
-					Runtime runtime = Runtime.getRuntime();
-					Process process;
-					String cmd = adbPath
-							+ " -s "
-							+ deviceName
-							+ " shell cat /system/build.prop | grep \"product\"";
-					process = runtime.exec(cmd);
-					InputStream is = process.getInputStream();
-					InputStreamReader isr = new InputStreamReader(is);
-					BufferedReader br = new BufferedReader(isr);
-					String line;
-					while ((line = br.readLine()) != null) {
-						// System.out.println(line);
+						if (line.startsWith("List of devices attached") || line.length() ==0) {
 
-						if (line.startsWith("ro.product.model")) {
-							String model = line.replaceAll(
-									"ro.product.model=", "");
-							dataMap.put("model", model);
+						} else {
+							addDeviceList.add(line.split("	")[0]);
+							 System.out.println(line.split("	")[0]);
 						}
 
 					}
 				} catch (Exception e) {
 
 				}
+			} else {
+				addDeviceList.add(paramDeviceName);
 			}
 
-			boolean wasIs = false;
-			for (Map dataMap2 : deviceList) {
-				if (dataMap2.get("deviceName").equals(deviceName)) {
-					System.out.println("device added - " + deviceName);
-					wasIs = true;
+			System.out.println(addDeviceList);
+			
+			for (String deviceName : addDeviceList) {
 
+				Map dataMap = new HashMap<String, String>();
+
+				dataMap.put("deviceName", deviceName);
+
+				// deviceList.add(deviceName);
+
+				{
+					try {
+						Runtime runtime = Runtime.getRuntime();
+						Process process;
+						String cmd = adbPath + " -s " + deviceName
+								+ " shell getprop ro.build.version.release";
+						process = runtime.exec(cmd);
+						InputStream is = process.getInputStream();
+						InputStreamReader isr = new InputStreamReader(is);
+						BufferedReader br = new BufferedReader(isr);
+						String line;
+						while ((line = br.readLine()) != null) {
+							// System.out.println(line);
+							dataMap.put("os", line);
+						}
+					} catch (Exception e) {
+
+					}
+				}
+				{
+					try {
+						Runtime runtime = Runtime.getRuntime();
+						Process process;
+						String cmd = adbPath
+								+ " -s "
+								+ deviceName
+								+ " shell cat /system/build.prop | grep \"product\"";
+						process = runtime.exec(cmd);
+						InputStream is = process.getInputStream();
+						InputStreamReader isr = new InputStreamReader(is);
+						BufferedReader br = new BufferedReader(isr);
+						String line;
+						while ((line = br.readLine()) != null) {
+							// System.out.println(line);
+
+							if (line.startsWith("ro.product.model")) {
+								String model = line.replaceAll(
+										"ro.product.model=", "");
+								dataMap.put("model", model);
+							}
+
+						}
+					} catch (Exception e) {
+
+					}
+				}
+
+				boolean wasIs = false;
+				for (Map dataMap2 : deviceList) {
+					if (dataMap2.get("deviceName").equals(deviceName)) {
+						System.out.println("device added - " + deviceName);
+						wasIs = true;
+
+					}
+				}
+
+				if (wasIs == false) {
+					if (dataMap.get("os") != null) {
+						deviceList.add(dataMap);
+						System.out.println(dataMap + " add....");
+					} else {
+						System.out.println("device not found - " + deviceName);
+					}
 				}
 			}
-
-			if (wasIs == false) {
-				if (dataMap.get("os") != null) {
-					deviceList.add(dataMap);
-					System.out.println(dataMap + " add....");
-				} else {
-					System.out.println("device not found - " + deviceName);
-				}
-			}
-
 		} else if (commandName.equals("devices")) {
 			try {
 				Runtime runtime = Runtime.getRuntime();
@@ -171,21 +201,26 @@ public class DeviceManager extends Thread {
 
 			}
 		} else if (commandName.startsWith("startTest")) {
-			//./adb shell am instrument -w -e class org.cerberus.test.CerberusTestRunner#testRun com.example.testandroid/android.test.InstrumentationTestRunner
+			// ./adb shell am instrument -w -e class
+			// org.cerberus.test.CerberusTestRunner#testRun
+			// com.example.testandroid/android.test.InstrumentationTestRunner
 			new Runnable() {
-				
+
 				@Override
 				public void run() {
-					System.out.println("---");
+					System.out.println("--- start test");
 					try {
 						String deviceName = command.split(" ")[1];
 
 						Runtime runtime = Runtime.getRuntime();
 						Process process;
-						String cmd = adbPath + " -s " + deviceName + " shell am instrument -w -e class org.cerberus.test.CerberusTestRunner#testRun com.example.testandroid/android.test.InstrumentationTestRunner";
+						String cmd = adbPath
+								+ " -s "
+								+ deviceName
+								+ " shell am instrument -w -e class org.cerberus.test.CerberusTestRunner#testRun com.autoschedule.proto/android.test.InstrumentationTestRunner";
 						System.out.println(cmd);
 						process = runtime.exec(cmd);
-//						process.waitFor();
+						// process.waitFor();
 						InputStream is = process.getInputStream();
 						InputStreamReader isr = new InputStreamReader(is);
 						BufferedReader br = new BufferedReader(isr);
@@ -196,20 +231,22 @@ public class DeviceManager extends Thread {
 
 					} catch (Exception e) {
 
-					}					
+					}
 				}
 			}.run();
-			
+			System.out.println("-=-=- finish test");
 		}
 	}
-	
-	
+
 	public static void installApk(String path, String deviceName) {
 		doCommand("install " + path + " " + deviceName);
 	}
-	
+
 	public static void startTest(String deviceName) {
 		doCommand("startTest " + deviceName);
 	}
-	
+
+	public static void allAddDevices() {
+		doCommand("add All");
+	}
 }

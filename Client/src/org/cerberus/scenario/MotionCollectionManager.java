@@ -1,5 +1,7 @@
 package org.cerberus.scenario;
 
+import android.util.Log;
+
 
 public class MotionCollectionManager {
 
@@ -13,6 +15,7 @@ public class MotionCollectionManager {
 	
 	public void putMotion(MotionVO motionData) {
 		System.out.println(motionData);
+		Log.i("cerberus", motionData.toString());
 		if(lastSleepTime == null) {
 			lastSleepTime = System.currentTimeMillis();
 		} else {

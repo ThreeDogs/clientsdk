@@ -35,7 +35,7 @@ public class CpuDump {
 				        BufferedReader br = new BufferedReader(isr);
 				        String line ;
 				        while ((line = br.readLine()) != null) {
-//				        	System.out.println(line);
+				        	System.out.println(line);
 //				        	String title = line.split(":")[0];
 //				        	String value = line.split(":")[1].replaceAll("kB", "").replaceAll(" ", "");
 				        	if(line.replaceAll(" ", "").endsWith("com.example.testandroid")){

@@ -9,7 +9,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 
-import scenario.org.cerberus.jarasm.CustomClassNode;
+import test.org.cerberus.jarasm.CustomClassNode;
 
 
 public class JarAsmTest {

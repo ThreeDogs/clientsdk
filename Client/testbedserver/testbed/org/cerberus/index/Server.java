@@ -9,7 +9,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -17,13 +19,13 @@ import org.apache.http.HttpException;
 
 public class Server {
 
-	public static void main(String[] args) throws IOException, HttpException {
+	public static void main(String[] args) throws IOException, HttpException, InterruptedException {
 
 		ServerSocket serverSocket = new ServerSocket(9000);
 
 		DeviceManager manager = new DeviceManager();
 		manager.start();
-
+		manager.allAddDevices();
 		while (true) {
 
 			System.out.println("--");
@@ -44,6 +46,10 @@ public class Server {
 				break;
 			}
 
+			System.out.println("---");
+			System.out.println(data);
+			System.out.println("---");
+			
 			if (data.indexOf("/favicon.ico") > 0) {
 				socket.getOutputStream()
 						.write("HTTP/1.1 200 OK\r\n".getBytes());
@@ -93,40 +99,54 @@ public class Server {
 			// Download APK
 			// make resultArea to ResultServer
 
+//			List<Thread> threadPool = new ArrayList<Thread>();
+//			
+//			for (final Map device : DeviceManager.getDeviceList()) {
+//
+//				Socket resultSocket = new Socket("127.0.0.1", 7000);
+//				resultSocket.getOutputStream().write(
+//						("make " + device.get("deviceName") + " " + "1 1")
+//								.getBytes());
+//				resultSocket.getOutputStream().flush();
+//				resultSocket.close();
+//
+//				
+//				Runnable r = new Runnable() {
+//
+//					@Override
+//					public void run() {
+//						String deviceName = (String) device.get("deviceName");
+//						DeviceManager.installApk(paramMap.get("apkPath")
+//								.replaceAll("%2F", "/"), deviceName);
+//						System.out.println(device.get("model") + " finish");
+//					}
+//				};
+//
+//				Thread t = new Thread(r);
+//				t.start();
+//				System.out.println("t" + t);
+//				threadPool.add(t);
+//			}
+//			
+//			for(Thread joinThread : threadPool) {
+//				joinThread.join();
+//			}
+//			
+			Thread.sleep(10000);
 			for (final Map device : DeviceManager.getDeviceList()) {
 
-				//
-				Socket resultSocket = new Socket("127.0.0.1", 7000);
-				resultSocket.getOutputStream().write(
-						("make " + device.get("deviceName") + " " + "1 1")
-								.getBytes());
-				resultSocket.getOutputStream().flush();
-				resultSocket.close();
-
-				new Runnable() {
+				new Thread( new Runnable() {
 
 					@Override
 					public void run() {
 						String deviceName = (String) device.get("deviceName");
-						DeviceManager.installApk(paramMap.get("apkPath")
-								.replaceAll("%2F", "/"), deviceName);
-					}
-				}.run();
-
-			}
-			for (final Map device : DeviceManager.getDeviceList()) {
-
-				new Runnable() {
-
-					@Override
-					public void run() {
-						String deviceName = (String) device.get("deviceName");
+						System.out.println(deviceName + " start");
 						DeviceManager.startTest(deviceName);
 					}
-				}.run();
+				}
+				).start();
 
 			}
-
 			// }
 			// conn.close();
 
@@ -170,4 +190,6 @@ public class Server {
 			}
 		}
 	}
+	
+	
 }

@@ -31,57 +31,79 @@ public class CerberusAPI {
 		System.out.println("------------------------");
 		
 		if(STATUS == STATUS_START) {
+			System.out.println("STATUE == STATUS_START");
 			return;
 		}
 		System.out.println("------------------------");
 		Button widgetBtn = new Button(c);
 		widgetBtn.setHeight(50);
+		widgetBtn.setId(0x1000);
 		widgetBtn.setWidth(50);
 		widgetBtn.setTag("CerberusWidgetBtn");
 		widgetBtn.setClickable(true);
 		widgetBtn.setFocusable(true);
 		widgetBtn.setText("Record...");
 		
-		widgetBtn.setOnClickListener(new OnClickListener() {
+//		widgetBtn.setOnClickListener(new OnClickListener() {
+//			private final int STATUS_RUNNING = 1;
+//			private final int STATUS_FINISH = 0;
+//			
+//			private int status = STATUS_FINISH;
+//			
+//			@Override
+//			public void onClick(View arg0) {
+//
+//				System.out.println("status = " + status);
+//				
+//				if(status == STATUS_RUNNING) {
+//					status = STATUS_FINISH;
+//					
+//					//send Network
+//					((NetworkMotionStream)MotionCollector.getInstance().getStream()).sendNetworkData();
+//					System.out.println("--"   );
+//				} else {
+//					status = STATUS_RUNNING;
+////					Toast.makeText(c, "Start scenario recording...", Toast.LENGTH_LONG).show();
+//				}
+//				
+//			}
+//		});
+		
+		widgetBtn.setOnTouchListener(new OnTouchListener() {
 			private final int STATUS_RUNNING = 1;
 			private final int STATUS_FINISH = 0;
 			
 			private int status = STATUS_FINISH;
-			
 			@Override
-			public void onClick(View arg0) {
+			public boolean onTouch(View v, MotionEvent motionEvent) {
 
+//				System.out.println(v + " " + motionEvent);
 				
-				if(status == STATUS_RUNNING) {
-					status = STATUS_FINISH;
+//				Toast.makeText(c, "Start scenario recording...", Toast.LENGTH_LONG).show();
+				
+				if(motionEvent.getAction()==MotionEvent.ACTION_UP) {
 					
-					//send Network
-					((NetworkMotionStream)MotionCollector.getInstance().getStream()).sendNetworkData();
-					System.out.println("--"   );
-				} else {
-					status = STATUS_RUNNING;
-					Toast.makeText(c, "Start scenario recording...", Toast.LENGTH_LONG).show();
+					
+					if(status == STATUS_RUNNING) {
+						status = STATUS_FINISH;
+						
+						//send Network
+						((NetworkMotionStream)MotionCollector.getInstance().getStream()).sendNetworkData();
+						System.out.println("--"   );
+					} else {
+						status = STATUS_RUNNING;
+
+						Toast toast = Toast.makeText(c.getApplicationContext(),	"Start scenario recording..." , Toast.LENGTH_LONG);
+						toast.setGravity(Gravity.CENTER, 0, 0);
+						toast.show();
+					}
+					
 				}
 				
+				
+				return false;
 			}
 		});
-		
-//		widgetBtn.setOnTouchListener(new OnTouchListener() {
-//			
-//			@Override
-//			public boolean onTouch(View v, MotionEvent motionEvent) {
-//
-////				System.out.println(v + " " + motionEvent);
-//				
-////				Toast.makeText(c, "Start scenario recording...", Toast.LENGTH_LONG).show();
-//				
-//				Toast toast = Toast.makeText(c.getApplicationContext(),	"Start scenario recording..." , Toast.LENGTH_LONG);
-//				toast.setGravity(Gravity.CENTER, 0, 0);
-//				toast.show();
-//				
-//				return false;
-//			}
-//		});
 		
 		STATUS = STATUS_START;
 		

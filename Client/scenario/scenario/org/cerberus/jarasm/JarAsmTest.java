@@ -56,11 +56,15 @@ public class JarAsmTest {
 	}
 	
 	private static void scanFile(String path) throws Exception {
-		
+		try{
 //		System.out.println("	" + path);
 		//&& 0>path.indexOf("$")
-		if(path.endsWith(".class") && 0<path.indexOf("Activity")) {
+//		if(path.endsWith(".class") && 0<path.indexOf("Activity")) {
 			// is class file
+			if(path.indexOf("android") > 0 && path.indexOf("support") > 0 && path.indexOf("v4") > 0) {
+				return;
+			}
+			
 			File classFile = new File(path);
 			
 			FileInputStream fis = new FileInputStream(classFile);
@@ -69,7 +73,7 @@ public class JarAsmTest {
 			
 			ClassReader cr = new ClassReader(fis);
 			ClassWriter cw = new ClassWriter(cr,api);
-			ClassNode cn = new CustomClassNode();
+			ClassNode cn = new CustomClassNode(classFile.getName());
 			
 			
 			cr.accept(cn, ClassReader.SKIP_FRAMES);
@@ -79,8 +83,11 @@ public class JarAsmTest {
 			FileOutputStream fos = new FileOutputStream(path);
 			fos.write(b);
 			fos.close();
+//		}
 		}
-		
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 }

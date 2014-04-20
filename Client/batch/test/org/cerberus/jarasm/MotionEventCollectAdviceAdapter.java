@@ -7,7 +7,7 @@ public class MotionEventCollectAdviceAdapter extends AdviceAdapter{
 
 	private String log;
 	
-	protected MotionEventCollectAdviceAdapter(int api, MethodVisitor mv,
+	public MotionEventCollectAdviceAdapter(int api, MethodVisitor mv,
 			int access, String name, String desc, String log) {
 		super(api, mv, access, name, desc);
 		System.out.println(api + " " + mv + " " + access + " " + name + " " + desc);
@@ -29,6 +29,10 @@ public class MotionEventCollectAdviceAdapter extends AdviceAdapter{
 		mv.visitMethodInsn(INVOKESTATIC,
 				"org/cerberus/profile/memory/MemoryDump",
 				"getMemoryTrace", "()V");
+
+		mv.visitMethodInsn(INVOKESTATIC,
+				"org/cerberus/profile/cpu/CpuDump",
+				"getCpuTrace", "()V");
 		
 		
 		//-----------------
