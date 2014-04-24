@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class MotionVO implements Serializable{
 
-	private Integer id;
+	private Integer seq_id;
 	private Long time_stamp;
 	private Long sleep;
 	private String activity_class;
@@ -77,17 +77,17 @@ public class MotionVO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "MotionVO [id=" + id + ", time=" + time_stamp + ", sleep=" + sleep
+		return "MotionVO [id=" + seq_id + ", time=" + time_stamp + ", sleep=" + sleep
 				+ ", activityClass=" + activity_class + ", type=" + action_type
 				+ ", param=" + param + ", view=" + view + "]";
 	}
 
 	public Integer getId() {
-		return id;
+		return seq_id;
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		this.seq_id = id;
 	}
 
 	public Long getTime_stamp() {

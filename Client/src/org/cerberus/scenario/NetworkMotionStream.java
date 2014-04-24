@@ -59,19 +59,22 @@ public class NetworkMotionStream implements AbstractMotionStream {
 					
 					HttpClient client = new DefaultHttpClient();
 					
-					String uri = "";
+					String uri = "http://172.16.101.75:3000/api/v1/test_scenarios";
 					
 					HttpPost post = new HttpPost(uri);
 					
 					List params = new ArrayList();
 					
-					params.add(new BasicNameValuePair("key", gson.toJson(motionList) ));
+					params.add(new BasicNameValuePair("id", "1" ));
+					params.add(new BasicNameValuePair("motion_events", gson.toJson(motionList) ));
 					
 					UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, HTTP.UTF_8);
 					
 					post.setEntity(ent);
 					
 					HttpResponse response = client.execute(post);
+					
+					Log.d("test", "send Data...");
 					
 					if(response.getEntity() != null) {
 						Log.i("test", EntityUtils.toString(response.getEntity()));
@@ -88,8 +91,7 @@ public class NetworkMotionStream implements AbstractMotionStream {
 				return null;
 			}
 			
-		};
-//		.execute(null)
+		}.execute();
 	}
 	
 	

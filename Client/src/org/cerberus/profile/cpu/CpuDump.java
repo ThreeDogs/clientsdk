@@ -17,7 +17,6 @@ public class CpuDump {
 
 			@Override
 			public void run() {
-
 				Map data = new HashMap();
 
 //				data.put("timestamp", System.currentTimeMillis());
