@@ -1,9 +1,11 @@
 package testbed.org.cerberus.index;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -42,9 +44,29 @@ public class Server {
 				if (data.indexOf("/favicon.ico") > 0) {
 					break;
 				}
-				data = data.split("\\?")[1].replaceAll(" HTTP/1.1", "");
-				break;
+//				System.out.println(data);
+//				data = data.split("\\?")[1].replaceAll(" HTTP/1.1", "");
+//				break;
+				
+				if(data.startsWith("Content-Length: ")) {
+					System.out.println("--ContentLength " + data);
+					Integer contentLength = new Integer( data.replaceAll("Content-Length: ", "") );
+					System.out.println(contentLength);
+
+					char[] buffer = new char[contentLength];
+					
+					BufferedReader br = new BufferedReader( new InputStreamReader( socket.getInputStream() ) );
+					
+					br.read(buffer);
+					
+					data = (new String(buffer)).toString();
+					
+					System.out.println(data);
+//					System.out.println(scanner.nextByte(contentLength-1));
+					break;
+				}
 			}
+			
 
 			System.out.println("---");
 			System.out.println(data);
@@ -71,7 +93,6 @@ public class Server {
 			// paramStr = EntityUtils.toString(entity);
 			// System.out.println(paramStr);
 			// } else {
-			// System.out.println("fuck");
 			// System.out.println(request );
 			//
 			// }
@@ -87,12 +108,16 @@ public class Server {
 			final Map<String, String> paramMap = new HashMap<String, String>();
 
 			// make parameter Map
-			for (String param : data.split("&")) {
-				String key = param.split("=")[0];
-				String value = param.split("=")[1];
+			for (String param : data.split(",")) {
+				String key = param.split(":")[0];
+				String value = param.split(":")[1];
 				paramMap.put(key, value);
 			}
 
+			
+			//paramMap {"test_scenario_ids"=[1]}, "total_report_id"=12, {"apk_url"="/uploads/apk/apk/4/TestAndroid.apk"}
+			System.out.println("paramMap " + paramMap.toString());
+			
 			// if(paramMap.get("order").equals("install")) {
 
 			// Todo

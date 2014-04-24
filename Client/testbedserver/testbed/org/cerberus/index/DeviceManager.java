@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class DeviceManager extends Thread {
 
-	private static final String adbPath = "/Users/RhoSunghyun/Documents/dev/adt-bundle-mac-x86_64-20130729/sdk/platform-tools/adb";
+	private static final String adbPath = "/Users/nohsunghyun/dev/adt/sdk/platform-tools/adb";
 
 	private static List<Map> deviceList = new ArrayList();
 
