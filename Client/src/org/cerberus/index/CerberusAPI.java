@@ -93,6 +93,8 @@ public class CerberusAPI {
 					} else {
 						status = STATUS_RUNNING;
 
+						((NetworkMotionStream)MotionCollector.getInstance().getStream()).getScenarioId();
+						
 						Toast toast = Toast.makeText(c.getApplicationContext(),	"Start scenario recording..." , Toast.LENGTH_LONG);
 						toast.setGravity(Gravity.CENTER, 0, 0);
 						toast.show();
