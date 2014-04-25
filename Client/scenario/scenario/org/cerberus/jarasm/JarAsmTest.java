@@ -14,6 +14,8 @@ import scenario.org.cerberus.jarasm.CustomClassNode;
 
 public class JarAsmTest {
 
+	public static String apiKey;
+	
 	public static void main(String[] args) throws Exception {
 		
 		System.out.println("--------------- Start Instrumentation Byte Code ---------------");
@@ -22,6 +24,10 @@ public class JarAsmTest {
 
 		if(args.length!=0 && args[0] != null) {
 			rootPath = args[0];
+		}
+		
+		if(args.length!=0 && args[1] != null) {
+			apiKey = args[1];
 		}
 		
 		if(!(new File(rootPath)).isDirectory() ) {
@@ -62,6 +68,9 @@ public class JarAsmTest {
 //		if(path.endsWith(".class") && 0<path.indexOf("Activity")) {
 			// is class file
 			if(path.indexOf("android") > 0 && path.indexOf("support") > 0 && path.indexOf("v4") > 0) {
+				return;
+			}
+			if(path.indexOf("android") > 0 && path.indexOf("support") > 0 && path.indexOf("v7") > 0) {
 				return;
 			}
 			
