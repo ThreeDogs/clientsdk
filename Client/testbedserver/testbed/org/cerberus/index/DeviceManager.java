@@ -111,6 +111,63 @@ public class DeviceManager extends Thread {
 					try {
 						Runtime runtime = Runtime.getRuntime();
 						Process process;
+						String cmd = adbPath + " -s " + deviceName
+								+ " shell getprop ro.product.cpu.abi";
+						process = runtime.exec(cmd);
+						InputStream is = process.getInputStream();
+						InputStreamReader isr = new InputStreamReader(is);
+						BufferedReader br = new BufferedReader(isr);
+						String line;
+						while ((line = br.readLine()) != null) {
+							// System.out.println(line);
+							dataMap.put("cpu", line);
+						}
+					} catch (Exception e) {
+						
+					}
+				}
+				{
+					try {
+						Runtime runtime = Runtime.getRuntime();
+						Process process;
+						String cmd = adbPath + " -s " + deviceName
+								+ " shell getprop ro.product.brand";
+						process = runtime.exec(cmd);
+						InputStream is = process.getInputStream();
+						InputStreamReader isr = new InputStreamReader(is);
+						BufferedReader br = new BufferedReader(isr);
+						String line;
+						while ((line = br.readLine()) != null) {
+							// System.out.println(line);
+							dataMap.put("brand", line);
+						}
+					} catch (Exception e) {
+						
+					}
+				}
+				{
+					try {
+						Runtime runtime = Runtime.getRuntime();
+						Process process;
+						String cmd = adbPath + " -s " + deviceName
+								+ " shell getprop persist.sys.country";
+						process = runtime.exec(cmd);
+						InputStream is = process.getInputStream();
+						InputStreamReader isr = new InputStreamReader(is);
+						BufferedReader br = new BufferedReader(isr);
+						String line;
+						while ((line = br.readLine()) != null) {
+							// System.out.println(line);
+							dataMap.put("country", line);
+						}
+					} catch (Exception e) {
+						
+					}
+				}
+				{
+					try {
+						Runtime runtime = Runtime.getRuntime();
+						Process process;
 						String cmd = adbPath
 								+ " -s "
 								+ deviceName
@@ -249,4 +306,7 @@ public class DeviceManager extends Thread {
 	public static void allAddDevices() {
 		doCommand("add All");
 	}
+	
+	
+	
 }
