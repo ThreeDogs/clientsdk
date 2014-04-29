@@ -61,7 +61,7 @@ public class NetworkMotionStream implements AbstractMotionStream {
 					
 					HttpClient client = new DefaultHttpClient();
 					
-					String uri = "http://172.16.101.75:3000/api/v1/motion_events";
+					String uri = "http://172.16.101.193:3000/api/v1/motion_events";
 					
 					HttpPost post = new HttpPost(uri);
 					
@@ -97,7 +97,7 @@ public class NetworkMotionStream implements AbstractMotionStream {
 	}
 	
 	
-	public void getScenarioId() {
+	public void getScenarioId(final String apkKey) {
 
 		System.out.println("get Scenario id/....");
 		
@@ -111,12 +111,12 @@ public class NetworkMotionStream implements AbstractMotionStream {
 					
 					HttpClient client = new DefaultHttpClient();
 					
-					String uri = "http://172.16.101.75:3000/api/v1/test_scenarios";
+					String uri = "http://172.16.101.193:3000/api/v1/test_scenarios";
 					
 					HttpPost post = new HttpPost(uri);
 					
 					List params = new ArrayList();
-					params.add(new BasicNameValuePair("project_id", "1" ));
+					params.add(new BasicNameValuePair("project_id", apkKey ));
 					UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, HTTP.UTF_8);
 					
 					post.setEntity(ent);

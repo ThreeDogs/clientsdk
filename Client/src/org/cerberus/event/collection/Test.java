@@ -10,7 +10,7 @@ public class Test extends Activity{
 		
 		System.out.println();
 		
-		new CerberusAPI(this).start(); 
+		new CerberusAPI(this,"1").start(); 
 		
 	}
 }

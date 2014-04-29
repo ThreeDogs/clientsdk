@@ -23,6 +23,7 @@ public class MotionCollectionManager {
 			lastSleepTime = System.currentTimeMillis();
 		}
 		motionData.setId(count++);
+		motionData.setTime_stamp(System.currentTimeMillis());
 		stream.sendData(motionData);
 		System.out.println(stream);
 	}

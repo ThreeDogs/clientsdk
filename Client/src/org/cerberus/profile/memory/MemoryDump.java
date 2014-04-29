@@ -49,7 +49,7 @@ public class MemoryDump {
 				        	String value = line.split(":")[1].replaceAll("kB", "").replaceAll(" ", "");
 				        	
 				        	if(title.replaceAll(" ", "").equals("MemTotal")){
-				        		System.out.println(title + ":" + value);
+//				        		System.out.println(title + ":" + value);
 				        		dataMap.put("mem_total", value);
 				        	}else if (title.replaceAll(" ", "").equals("MemFree")) {
 				        		dataMap.put("mem_free", value);
@@ -70,7 +70,7 @@ public class MemoryDump {
 			    Log.d("cerberus", "debug.heap native: allocated " + df.format(allocated) + "MB of " + df.format(available) + "MB (" + df.format(free) + "MB free)");
 			    Log.d("cerberus", "debug.memory: allocated: " + df.format(new Double(Runtime.getRuntime().totalMemory()/1048576)) + "MB of " + df.format(new Double(Runtime.getRuntime().maxMemory()/1048576))+ "MB (" + df.format(new Double(Runtime.getRuntime().freeMemory()/1048576)) +"MB free)");
 			    
-			    dataMap.put("id", count++);
+//			    dataMap.put("id"s, count++);
 			    dataMap.put("mem_alloc",  Integer.parseInt((String)dataMap.get("mem_total") )  -  Integer.parseInt((String)dataMap.get("mem_free"))  );
 			    dataMap.put("native_heap_free", df.format(free));
 			    dataMap.put("native_heap_alloc", df.format(allocated));
@@ -78,10 +78,11 @@ public class MemoryDump {
 //			    dataMap.put("DalvikHeapFree",  Integer.parseInt((String)dataMap.get("MemFree")) - Integer.parseInt((String)dataMap.get("NativeHeapFree")) );
 			    dataMap.put("dalvik_heap_alloc", (Integer)dataMap.get("mem_alloc") - Double.parseDouble((String)dataMap.get("native_heap_alloc")));
 			    dataMap.put("dalvik_heap_size", Integer.parseInt((String)dataMap.get("mem_total")) - Double.parseDouble((String)dataMap.get("native_heap_size")));
+			    dataMap.put("client_timestamp", System.currentTimeMillis());
 				
 			    MemoryDataList.getInstance().add(dataMap);
 			    
-				System.out.println(res);
+//				System.out.println(res);
 			
 				
 			}

@@ -1,5 +1,6 @@
 package org.cerberus.index;
 
+import org.cerberus.crawler.ProfilingCrawler;
 import org.cerberus.event.collection.MotionCollector;
 import org.cerberus.scenario.NetworkMotionStream;
 
@@ -21,9 +22,12 @@ public class CerberusAPI {
 	
 	private static int STATUS = STATUS_NONE;
 	private Context c;
+	private String apiKey;
 	
-	public CerberusAPI(Context c) {
+	
+	public CerberusAPI(Context c, String apiKey) {
 		this.c = c;
+		this.apiKey = apiKey;
 	}
 	
 	public void start() {
@@ -93,7 +97,7 @@ public class CerberusAPI {
 					} else {
 						status = STATUS_RUNNING;
 
-						((NetworkMotionStream)MotionCollector.getInstance().getStream()).getScenarioId();
+						((NetworkMotionStream)MotionCollector.getInstance().getStream()).getScenarioId(apiKey);
 						
 						Toast toast = Toast.makeText(c.getApplicationContext(),	"Start scenario recording..." , Toast.LENGTH_LONG);
 						toast.setGravity(Gravity.CENTER, 0, 0);
@@ -124,4 +128,7 @@ public class CerberusAPI {
 		
 	}
 	
+//	public void a(){
+//		ProfilingCrawler.getInstance().start();
+//	}
 }
