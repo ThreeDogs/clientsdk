@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>cerberus.testbedserver.servlet</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <listener>
+    <listener-class>org.cerberus.testbed.listener.ContextListener</listener-class>
+  </listener>
+  
+  <servlet>
+    <description></description>
+    <display-name>DeviceInfoServlet</display-name>
+    <servlet-name>DeviceInfoServlet</servlet-name>
+    <servlet-class>org.cerberus.testbed.controller.DeviceInfoServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DeviceInfoServlet</servlet-name>
+    <url-pattern>/DeviceInfo</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <description></description>
+    <display-name>StartDeviceServlet</display-name>
+    <servlet-name>StartDeviceServlet</servlet-name>
+    <servlet-class>org.cerberus.testbed.controller.StartDeviceServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>StartDeviceServlet</servlet-name>
+    <url-pattern>/StartDevice</url-pattern>
+  </servlet-mapping>
+</web-app>
