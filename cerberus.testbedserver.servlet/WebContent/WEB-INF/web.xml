@@ -9,11 +9,9 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-  
   <listener>
     <listener-class>org.cerberus.testbed.listener.ContextListener</listener-class>
   </listener>
-  
   <servlet>
     <description></description>
     <display-name>DeviceInfoServlet</display-name>
@@ -24,7 +22,6 @@
     <servlet-name>DeviceInfoServlet</servlet-name>
     <url-pattern>/DeviceInfo</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <description></description>
     <display-name>StartDeviceServlet</display-name>
@@ -34,5 +31,35 @@
   <servlet-mapping>
     <servlet-name>StartDeviceServlet</servlet-name>
     <url-pattern>/StartDevice</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ResultProfilingServlet</display-name>
+    <servlet-name>ResultProfilingServlet</servlet-name>
+    <servlet-class>org.cerberus.testbed.servlet.ResultProfilingServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ResultProfilingServlet</servlet-name>
+    <url-pattern>/ResultProfilingServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ImageUploadServlet</display-name>
+    <servlet-name>ImageUploadServlet</servlet-name>
+    <servlet-class>org.cerberus.testbed.servlet.ImageUploadServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ImageUploadServlet</servlet-name>
+    <url-pattern>/ImageUploadServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ScenarioInfoServlet</display-name>
+    <servlet-name>ScenarioInfoServlet</servlet-name>
+    <servlet-class>org.cerberus.testbed.servlet.ScenarioInfoServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ScenarioInfoServlet</servlet-name>
+    <url-pattern>/ScenarioInfoServlet</url-pattern>
   </servlet-mapping>
 </web-app>
