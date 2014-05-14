@@ -311,6 +311,37 @@ public class DeviceManager extends Thread {
 				}
 			}.run();
 			System.out.println("-=-=- finish test");
+		} else if (commandName.startsWith("uninstall")) {
+			new Runnable() {
+
+				@Override
+				public void run() {
+					System.out.println("--- start test");
+					try {
+						String deviceName = command.split(" ")[1];
+						String packageName = command.split(" ")[2];
+						Runtime runtime = Runtime.getRuntime();
+						Process process;
+						String cmd = adbPath
+								+ " -s "
+								+ deviceName
+								+ " uninstall " + packageName;
+						System.out.println(cmd);
+						process = runtime.exec(cmd);
+						// process.waitFor();
+						InputStream is = process.getInputStream();
+						InputStreamReader isr = new InputStreamReader(is);
+						BufferedReader br = new BufferedReader(isr);
+						String line;
+						while ((line = br.readLine()) != null) {
+							System.out.println(line);
+						}
+
+					} catch (Exception e) {
+
+					}
+				}
+			}.run();
 		}
 	}
 
@@ -326,6 +357,8 @@ public class DeviceManager extends Thread {
 		doCommand("add All");
 	}
 	
-	
+	public static void uninstallApk(String deviceName , String apkPackage) {
+		doCommand("uninstall " + deviceName + " "  + apkPackage);
+	}
 	
 }
