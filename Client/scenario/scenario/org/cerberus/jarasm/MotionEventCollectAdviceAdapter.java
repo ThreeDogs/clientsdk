@@ -82,18 +82,27 @@ public class MotionEventCollectAdviceAdapter extends AdviceAdapter{
 			return;
 		}
 		
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitLdcInsn(new Integer(16908290));
+		mv.visitMethodInsn(INVOKEVIRTUAL, "android/view/View", "findViewById", "(I)Landroid/view/View;");
+		mv.visitMethodInsn(INVOKEVIRTUAL, "android/view/View", "getRootView", "()Landroid/view/View;");
+		mv.visitTypeInsn(CHECKCAST, "android/widget/FrameLayout");
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitMethodInsn(INVOKEVIRTUAL, "android/view/View", "getContext", "()Landroid/content/Context;");
+		mv.visitMethodInsn(INVOKESTATIC, "org/cerberus/scenario/RuntimeMotionInjector", "injectEvent", "(Landroid/view/View;Landroid/content/Context;)V");
+		
 //		mv.visitVarInsn(ALOAD, 0);
-		mv.visitLdcInsn("Cerberus");
-		mv.visitLdcInsn("finish " + log);
-		mv.visitMethodInsn(INVOKESTATIC,
-				"android/util/Log",
-				"i", "(Ljava/lang/String;Ljava/lang/String;)I");
+//		mv.visitLdcInsn("Cerberus");
+//		mv.visitLdcInsn("finish " + log);
+//		mv.visitMethodInsn(INVOKESTATIC,
+//				"android/util/Log",
+//				"i", "(Ljava/lang/String;Ljava/lang/String;)I");
 		
 //		mv.visitEnd();
 		
-		mv.visitMethodInsn(INVOKESTATIC,
-				"org/cerberus/profile/memory/MemoryDump",
-				"getMemoryTrace", "()V");
+//		mv.visitMethodInsn(INVOKESTATIC,
+//				"org/cerberus/profile/memory/MemoryDump",
+//				"getMemoryTrace", "()V");
 		
 
 		super.onMethodExit(opcode);

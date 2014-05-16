@@ -73,6 +73,9 @@ public class JarAsmTest {
 			if(path.indexOf("android") > 0 && path.indexOf("support") > 0 && path.indexOf("v7") > 0) {
 				return;
 			}
+			if(path.indexOf("com") > 0 && path.indexOf("actionbarsherlock") > 0 ) {
+				return;
+			}
 			
 			File classFile = new File(path);
 			

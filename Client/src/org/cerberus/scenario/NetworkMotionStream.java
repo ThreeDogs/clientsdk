@@ -32,7 +32,14 @@ public class NetworkMotionStream implements AbstractMotionStream {
 		motionList.add(data);
 		
 	}
-	
+	@Override
+	public void updateData(MotionVO data) {
+		System.out.println(data + ".update");
+		motionList.get(motionList.size() -1 ).setSleep(data.getSleep()); ;
+		motionList.get(motionList.size() -1 ).setParam(data.getParam()); ;
+		
+		System.out.println(motionList.toString());
+	}
 	
 
 	public List<MotionVO> getMotionList() {
@@ -152,6 +159,10 @@ public class NetworkMotionStream implements AbstractMotionStream {
 		
 		System.out.println("finish get Scenario Id");
 	}
+
+
+
+	
 	
 	
 }

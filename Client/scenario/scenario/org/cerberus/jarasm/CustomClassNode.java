@@ -11,7 +11,9 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
-public class CustomClassNode extends ClassNode {
+import scenario.org.cerberus.jarasm.actionbar.NaviItemListenerAdviceAdapter;
+
+public class CustomClassNode extends ClassNode implements Opcodes{
 
 	private String[] interfaces;
 
@@ -25,7 +27,7 @@ public class CustomClassNode extends ClassNode {
 
 	@Override
 	public void visitSource(String file, String debug) {
-		System.out.println("visitSource  " + file + " " + debug);
+//		System.out.println("visitSource  " + file + " " + debug);
 
 		super.visitSource(file, debug);
 	}
@@ -49,11 +51,15 @@ public class CustomClassNode extends ClassNode {
 	public MethodVisitor visitMethod(int access, String name, String desc,
 			String signature, String[] exceptions) {
 
-		System.out.println("visitMethod - " + access + " " + name + " " + desc
-				+ " " + signature + " " + Arrays.toString(exceptions) + " "
-				+ Arrays.toString(this.interfaces) + superName);
+//		System.out.println("visitMethod - " + access + " " + name + " " + desc
+//				+ " " + signature + " " + Arrays.toString(exceptions) + " "
+//				+ Arrays.toString(this.interfaces) + superName);
 
+		System.out.println(name + "   " + superName + "   " + fileName + "  " + Arrays.toString(interfaces));
+		
 		methodList.add(name);
+		
+		
 		
 		if (name.startsWith("<")) { // || (0<name.indexOf("$")) 달러 조건 삭제
 			return super.visitMethod(access, name, desc, signature, exceptions);
@@ -62,6 +68,33 @@ public class CustomClassNode extends ClassNode {
 		MethodVisitor mv = super.visitMethod(access, name, desc, signature,
 				exceptions);
 
+		for(String interfaceName : interfaces) { 
+			if (interfaceName.equals("android/app/DatePickerDialog$OnDateSetListener")){
+				if (name.equals("onDateSet")) {
+					DatePickerAdviceAdapter datePickerAdviceAdapter = new DatePickerAdviceAdapter(Opcodes.ASM4, mv, access, name, desc, fileName + "dataPicker ...");
+					return datePickerAdviceAdapter;
+				}
+			}
+			if (interfaceName.equals("android/app/TimePickerDialog$OnTimeSetListener")){
+				if (name.equals("onTimeSet")) {
+					TimePickerAdviceAdapter timePickerAdviceAdapter = new TimePickerAdviceAdapter(Opcodes.ASM4, mv, access, name, desc, fileName + "timePicker ...");
+					return timePickerAdviceAdapter;
+				}
+			}
+			if (interfaceName.equals("android/widget/AdapterView$OnItemClickListener")){
+				if (name.equals("onItemClick")) {
+					ListViewOnClickAdviceAdapter listViewOnClickAdviceAdapter = new ListViewOnClickAdviceAdapter(Opcodes.ASM4, mv, access, name, desc, fileName + "listView item click ...");
+					return listViewOnClickAdviceAdapter;
+				}
+			}
+			if (interfaceName.equals("android/widget/AdapterView$OnItemLongClickListener")){
+				if (name.equals("onItemLongClick")) {
+					ListViewOnClickAdviceAdapter listViewOnClickAdviceAdapter = new ListViewOnClickAdviceAdapter(Opcodes.ASM4, mv, access, name, desc, fileName + "listView item click ...");
+					return listViewOnClickAdviceAdapter;
+				}
+			}
+		}
+		
 		if (name.equals("onMenuItemSelected") && interfaces != null) {
 
 			for (int i = 0; i < this.interfaces.length; i++) {
@@ -75,19 +108,33 @@ public class CustomClassNode extends ClassNode {
 
 					
 					//ActionBar
-					ActionBarMotionEventCollectAdviceAdapter motionEventCollectAdviceAdapter = new ActionBarMotionEventCollectAdviceAdapter(
-							Opcodes.ASM4, mv, access, name, desc,
-							"Activity onMenuItemSelected");
-					return motionEventCollectAdviceAdapter;
+//					ActionBarMotionEventCollectAdviceAdapter motionEventCollectAdviceAdapter = new ActionBarMotionEventCollectAdviceAdapter(
+//							Opcodes.ASM4, mv, access, name, desc,
+//							"Activity onMenuItemSelected");
+//					return motionEventCollectAdviceAdapter;
 					
 				}
 			}
-		} else if (name.equals("onMenuItemSelected")) {
-			MotionEventCollectAdviceAdapter motionEventCollectAdviceAdapter = new MotionEventCollectAdviceAdapter(
+		} 
+//		else if (name.equals("onMenuItemSelected")) {
+//			MotionEventCollectAdviceAdapter motionEventCollectAdviceAdapter = new MotionEventCollectAdviceAdapter(
+//					Opcodes.ASM4, mv, access, name, desc,
+//					"Activity onMenuItemSelected");
+//			return motionEventCollectAdviceAdapter;
+//		} 
+		if (name.equals("onOptionsItemSelected")) {
+			OnOptionsItemSelectedAdviceAdapter onOptionItemSelectedAdviceAdapter = new OnOptionsItemSelectedAdviceAdapter(
 					Opcodes.ASM4, mv, access, name, desc,
-					"Activity onMenuItemSelected");
-			return motionEventCollectAdviceAdapter;
+					fileName + "    onOptionsItemSelected");
+			return onOptionItemSelectedAdviceAdapter;
 		}
+		if (name.equals("naviItemListener")) {
+			NaviItemListenerAdviceAdapter naviItemListenerAdviceAdapter = new NaviItemListenerAdviceAdapter(
+					Opcodes.ASM4, mv, access, name, desc,
+					fileName + "    naviItemListenerAdviceAdapter");
+			return naviItemListenerAdviceAdapter;
+		}
+		
 
 		if( 0<desc.indexOf("Landroid/view/View" ) && name.equals("onItemClick") && interfaces != null) {
 			for(int i = 0 ; i < this.interfaces.length; i++) {
@@ -103,37 +150,45 @@ public class CustomClassNode extends ClassNode {
 
 			// sqlite 예외 조건
 			if (!superName.equals("android/database/sqlite/SQLiteOpenHelper")) {
-				System.out.println("onCreate----  " + fileName);
-				System.out.println("visitMethod - " + access + " " + name + " "
-						+ desc + " " + signature + " "
-						+ Arrays.toString(exceptions) + " "
-						+ Arrays.toString(this.interfaces) + superName);
+//				System.out.println("onCreate----  " + fileName);
+//				System.out.println("visitMethod - " + access + " " + name + " "
+//						+ desc + " " + signature + " "
+//						+ Arrays.toString(exceptions) + " "
+//						+ Arrays.toString(this.interfaces) + superName);
+				
+				if(superName.indexOf("Dialog") > 0 ) {
+//					DialogOnCreateAdapter dialogOnCreateAdapter = new DialogOnCreateAdapter(
+//							Opcodes.ASM4, mv, access, name, desc);
+//					return dialogOnCreateAdapter;
+					return mv;
+				} else {
+				
 				OnCreateAdapter onCreateAdapter = new OnCreateAdapter(
 						Opcodes.ASM4, mv, access, name, desc);
 				return onCreateAdapter;
-
+				}
 			}
 		}
-		if (name.equals("onCreateOptionsMenu")) {
-			
-			// sqlite 예외 조건
-				System.out.println("onCreateOptionsMenu----  " + fileName);
-				System.out.println("visitMethod - " + access + " " + name + " "
-						+ desc + " " + signature + " "
-						+ Arrays.toString(exceptions) + " "
-						+ Arrays.toString(this.interfaces) + superName);
-				MotionEventCollectAdviceAdapter motionEventCollectAdviceAdapter = new MotionEventCollectAdviceAdapter(
-						Opcodes.ASM4, mv, access, name, desc,
-						"onCreateOptionsMenu onClick");
-				return motionEventCollectAdviceAdapter;
-				
-		}
+//		if (name.equals("onCreateOptionsMenu")) {
+//			
+//			// sqlite 예외 조건
+//				System.out.println("onCreateOptionsMenu----  " + fileName);
+//				System.out.println("visitMethod - " + access + " " + name + " "
+//						+ desc + " " + signature + " "
+//						+ Arrays.toString(exceptions) + " "
+//						+ Arrays.toString(this.interfaces) + superName);
+//				MotionEventCollectAdviceAdapter motionEventCollectAdviceAdapter = new MotionEventCollectAdviceAdapter(
+//						Opcodes.ASM4, mv, access, name, desc,
+//						"onCreateOptionsMenu onClick");
+//				return motionEventCollectAdviceAdapter;
+//				
+//		}
 		if (name.equals("onClick")) {
-			System.out.println("onClick----  " + fileName);
-			System.out.println("visitMethod - " + access + " " + name + " "
-					+ desc + " " + signature + " "
-					+ Arrays.toString(exceptions) + " "
-					+ Arrays.toString(this.interfaces) + superName);
+//			System.out.println("onClick----  " + fileName);
+//			System.out.println("visitMethod - " + access + " " + name + " "
+//					+ desc + " " + signature + " "
+//					+ Arrays.toString(exceptions) + " "
+//					+ Arrays.toString(this.interfaces) + superName);
 			// MotionEventCollectAdviceAdapter eventCollectAdviceAdapter =
 			// new MotionEventCollectAdviceAdapter(Opcodes.ASM4, mv, access,
 			// name, desc, "");
@@ -144,11 +199,11 @@ public class CustomClassNode extends ClassNode {
 				for (int i = 0; i < this.interfaces.length; i++) {
 					if (interfaces[i]
 							.equals("android/view/View$OnClickListener")) {
-						System.out.println("onClick----  " + fileName);
-						System.out.println("visitMethod - " + access + " "
-								+ name + " " + desc + " " + signature + " "
-								+ Arrays.toString(exceptions) + " "
-								+ Arrays.toString(this.interfaces) + superName);
+//						System.out.println("onClick----  " + fileName);
+//						System.out.println("visitMethod - " + access + " "
+//								+ name + " " + desc + " " + signature + " "
+//								+ Arrays.toString(exceptions) + " "
+//								+ Arrays.toString(this.interfaces) + superName);
 						MotionEventCollectAdviceAdapter motionEventCollectAdviceAdapter = new MotionEventCollectAdviceAdapter(
 								Opcodes.ASM4, mv, access, name, desc,
 								"OnClickListener onClick");
@@ -159,7 +214,7 @@ public class CustomClassNode extends ClassNode {
 
 		}
 		// else {
-		System.out.println(name);
+//		System.out.println(name);
 		return mv;
 		// }
 
@@ -190,17 +245,25 @@ public class CustomClassNode extends ClassNode {
 	public void visitEnd() {
 
 		boolean isOnCreateOptionsMenu = false;
-
+		boolean isOnKeyDown = false;
+		boolean isActivity = false;
+		
+		if(superName.toLowerCase().indexOf("activity") > 0) {
+			isActivity = true;
+		}
+		
 		if(superName.toLowerCase().indexOf("activity") > 0 || !(superName.toLowerCase().indexOf("sherlock")>0)) {
 		
 			for(Object methodName : methods) {
 				if(methodName.toString().equals("onCreateOptionsMenu")) {
 					isOnCreateOptionsMenu = true;
-					break;
+				}
+				if(methodName.toString().equals("onKeyDown")) {
+					isOnKeyDown = true;
 				}
 			}
 	
-			if(!isOnCreateOptionsMenu) {
+			if(!isOnCreateOptionsMenu && isActivity) {
 				//Create isOnCreateOptionMenu
 				
 				
@@ -228,6 +291,134 @@ public class CustomClassNode extends ClassNode {
 				mv.visitMaxs(2, 1);
 				mv.visitEnd();
 	
+			}
+			if(!isOnKeyDown && isActivity) {
+				//Create isOnKeyDown
+				MethodVisitor mv = super.visitMethod(Opcodes.ACC_PUBLIC, "onKeyDown", "(ILandroid/view/KeyEvent;)Z", null, null);
+				mv.visitCode();
+				Label l0 = new Label();
+				mv.visitLabel(l0);
+				mv.visitLineNumber(91, l0);
+				mv.visitVarInsn(ALOAD, 2);
+				mv.visitMethodInsn(INVOKEVIRTUAL, "android/view/KeyEvent", "getAction", "()I");
+				Label l1 = new Label();
+				mv.visitJumpInsn(IFNE, l1);
+				Label l2 = new Label();
+				mv.visitLabel(l2);
+				mv.visitLineNumber(92, l2);
+				mv.visitVarInsn(ILOAD, 1);
+				mv.visitInsn(ICONST_4);
+				Label l3 = new Label();
+				mv.visitJumpInsn(IF_ICMPNE, l3);
+				Label l4 = new Label();
+				mv.visitLabel(l4);
+				mv.visitLineNumber(93, l4);
+				mv.visitMethodInsn(INVOKESTATIC, "org/cerberus/event/collection/MotionCollector", "getInstance", "()Lorg/cerberus/scenario/MotionCollectionManager;");
+				mv.visitTypeInsn(NEW, "org/cerberus/scenario/MotionVO");
+				mv.visitInsn(DUP);
+				mv.visitMethodInsn(INVOKESTATIC, "java/lang/System", "currentTimeMillis", "()J");
+				mv.visitMethodInsn(INVOKESTATIC, "java/lang/Long", "valueOf", "(J)Ljava/lang/Long;");
+				mv.visitVarInsn(ALOAD, 0);
+				mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Object", "getClass", "()Ljava/lang/Class;");
+				mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getName", "()Ljava/lang/String;");
+				mv.visitLdcInsn("BackButton");
+				mv.visitLdcInsn("");
+				mv.visitLdcInsn("");
+				mv.visitMethodInsn(INVOKESPECIAL, "org/cerberus/scenario/MotionVO", "<init>", "(Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+				mv.visitMethodInsn(INVOKEVIRTUAL, "org/cerberus/scenario/MotionCollectionManager", "putMotion", "(Lorg/cerberus/scenario/MotionVO;)V");
+				Label l5 = new Label();
+				mv.visitLabel(l5);
+				mv.visitLineNumber(94, l5);
+				mv.visitJumpInsn(GOTO, l1);
+				mv.visitLabel(l3);
+				mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+				mv.visitVarInsn(ILOAD, 1);
+				mv.visitIntInsn(BIPUSH, 82);
+				Label l6 = new Label();
+				mv.visitJumpInsn(IF_ICMPNE, l6);
+				Label l7 = new Label();
+				mv.visitLabel(l7);
+				mv.visitLineNumber(95, l7);
+				mv.visitMethodInsn(INVOKESTATIC, "org/cerberus/event/collection/MotionCollector", "getInstance", "()Lorg/cerberus/scenario/MotionCollectionManager;");
+				mv.visitTypeInsn(NEW, "org/cerberus/scenario/MotionVO");
+				mv.visitInsn(DUP);
+				mv.visitMethodInsn(INVOKESTATIC, "java/lang/System", "currentTimeMillis", "()J");
+				mv.visitMethodInsn(INVOKESTATIC, "java/lang/Long", "valueOf", "(J)Ljava/lang/Long;");
+				mv.visitVarInsn(ALOAD, 0);
+				mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Object", "getClass", "()Ljava/lang/Class;");
+				mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getName", "()Ljava/lang/String;");
+				mv.visitLdcInsn("MenuButton");
+				mv.visitLdcInsn("");
+				mv.visitLdcInsn("");
+				mv.visitMethodInsn(INVOKESPECIAL, "org/cerberus/scenario/MotionVO", "<init>", "(Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+				mv.visitMethodInsn(INVOKEVIRTUAL, "org/cerberus/scenario/MotionCollectionManager", "putMotion", "(Lorg/cerberus/scenario/MotionVO;)V");
+				Label l8 = new Label();
+				mv.visitLabel(l8);
+				mv.visitLineNumber(96, l8);
+				mv.visitJumpInsn(GOTO, l1);
+				mv.visitLabel(l6);
+				mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+				mv.visitVarInsn(ILOAD, 1);
+				mv.visitIntInsn(BIPUSH, 24);
+				Label l9 = new Label();
+				mv.visitJumpInsn(IF_ICMPNE, l9);
+				Label l10 = new Label();
+				mv.visitLabel(l10);
+				mv.visitLineNumber(97, l10);
+				mv.visitMethodInsn(INVOKESTATIC, "org/cerberus/event/collection/MotionCollector", "getInstance", "()Lorg/cerberus/scenario/MotionCollectionManager;");
+				mv.visitTypeInsn(NEW, "org/cerberus/scenario/MotionVO");
+				mv.visitInsn(DUP);
+				mv.visitMethodInsn(INVOKESTATIC, "java/lang/System", "currentTimeMillis", "()J");
+				mv.visitMethodInsn(INVOKESTATIC, "java/lang/Long", "valueOf", "(J)Ljava/lang/Long;");
+				mv.visitVarInsn(ALOAD, 0);
+				mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Object", "getClass", "()Ljava/lang/Class;");
+				mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getName", "()Ljava/lang/String;");
+				mv.visitLdcInsn("VolumeUp");
+				mv.visitLdcInsn("");
+				mv.visitLdcInsn("");
+				mv.visitMethodInsn(INVOKESPECIAL, "org/cerberus/scenario/MotionVO", "<init>", "(Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+				mv.visitMethodInsn(INVOKEVIRTUAL, "org/cerberus/scenario/MotionCollectionManager", "putMotion", "(Lorg/cerberus/scenario/MotionVO;)V");
+				Label l11 = new Label();
+				mv.visitLabel(l11);
+				mv.visitLineNumber(98, l11);
+				mv.visitJumpInsn(GOTO, l1);
+				mv.visitLabel(l9);
+				mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+				mv.visitVarInsn(ILOAD, 1);
+				mv.visitIntInsn(BIPUSH, 25);
+				mv.visitJumpInsn(IF_ICMPNE, l1);
+				Label l12 = new Label();
+				mv.visitLabel(l12);
+				mv.visitLineNumber(99, l12);
+				mv.visitMethodInsn(INVOKESTATIC, "org/cerberus/event/collection/MotionCollector", "getInstance", "()Lorg/cerberus/scenario/MotionCollectionManager;");
+				mv.visitTypeInsn(NEW, "org/cerberus/scenario/MotionVO");
+				mv.visitInsn(DUP);
+				mv.visitMethodInsn(INVOKESTATIC, "java/lang/System", "currentTimeMillis", "()J");
+				mv.visitMethodInsn(INVOKESTATIC, "java/lang/Long", "valueOf", "(J)Ljava/lang/Long;");
+				mv.visitVarInsn(ALOAD, 0);
+				mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Object", "getClass", "()Ljava/lang/Class;");
+				mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getName", "()Ljava/lang/String;");
+				mv.visitLdcInsn("VolumeDown");
+				mv.visitLdcInsn("");
+				mv.visitLdcInsn("");
+				mv.visitMethodInsn(INVOKESPECIAL, "org/cerberus/scenario/MotionVO", "<init>", "(Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+				mv.visitMethodInsn(INVOKEVIRTUAL, "org/cerberus/scenario/MotionCollectionManager", "putMotion", "(Lorg/cerberus/scenario/MotionVO;)V");
+				mv.visitLabel(l1);
+				mv.visitLineNumber(103, l1);
+				mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+				mv.visitVarInsn(ALOAD, 0);
+				mv.visitVarInsn(ILOAD, 1);
+				mv.visitVarInsn(ALOAD, 2);
+				mv.visitMethodInsn(INVOKESPECIAL, "android/app/Activity", "onKeyDown", "(ILandroid/view/KeyEvent;)Z");
+				mv.visitInsn(IRETURN);
+				Label l13 = new Label();
+				mv.visitLabel(l13);
+				mv.visitLocalVariable("this", "Lcom/example/testandroid/MainActivity;", null, l0, l13, 0);
+				mv.visitLocalVariable("keyCode", "I", null, l0, l13, 1);
+				mv.visitLocalVariable("event", "Landroid/view/KeyEvent;", null, l0, l13, 2);
+				mv.visitMaxs(8, 3);
+				mv.visitEnd();
+				
 			}
 		}		
 		super.visitEnd();

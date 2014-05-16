@@ -14,4 +14,10 @@ public class LogMotionStream implements AbstractMotionStream {
 		
 	}
 
+	@Override
+	public void updateData(MotionVO data) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
