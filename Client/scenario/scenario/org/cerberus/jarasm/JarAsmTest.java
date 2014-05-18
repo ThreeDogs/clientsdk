@@ -17,11 +17,14 @@ public class JarAsmTest {
 	public static String apiKey;
 	
 	public static void main(String[] args) throws Exception {
-		
+//		if(args!=null) {
+//			return;
+//		}
 		System.out.println("--------------- Start Instrumentation Byte Code ---------------");
 		
 		String rootPath = "/Users/RhoSunghyun/Documents/dev/ttttttttttttttt/temp/newclz";
-
+		String packageName = "";
+		
 		if(args.length!=0 && args[0] != null) {
 			rootPath = args[0];
 		}
@@ -29,19 +32,51 @@ public class JarAsmTest {
 		if(args.length!=0 && args[1] != null) {
 			apiKey = args[1];
 		}
+
+		if(args.length>=3 && args[2] != null) {
+			packageName = args[2];
+			while( packageName.indexOf(".") > 0 ) {
+				packageName = packageName.replace(".", "/");
+			}
+			
+		}
 		
-		if(!(new File(rootPath)).isDirectory() ) {
+		if(!(new File(rootPath + "/" + packageName)).isDirectory() ) {
+			System.out.println(rootPath + "/" + packageName + " is not directory");
 			return;
 		}
 		
-		scanDirectory(rootPath);
+		scanDirectory((new File(rootPath + "/" + packageName)).getParentFile().getAbsolutePath());
 		
 		System.out.println("--------------- finish Instrumentation Byte Code ---------------");
+		System.out.println("root - " + (new File(rootPath + "/" + packageName)).getAbsolutePath() );
 	}
 	
 	private static void scanDirectory(String path) throws Exception {
 
 		File rootDirectory = new File(path);
+		
+		boolean isSingleName = false;
+		String faildString = "";
+		for(String list : rootDirectory.list() ) {
+			
+			File childFile = new File(rootDirectory.getAbsolutePath() + "/" + list);
+			
+			if(childFile.isDirectory()) {
+			} else {
+				if(childFile.getName().replaceAll(".class", "").length() < 3 && !childFile.getName().replace(".class", "").equals("R") ){
+					isSingleName = true;
+					faildString = childFile.getName().replaceAll(".class", "");
+					break;
+				}
+			}
+			
+		}	
+		
+		if(isSingleName) {
+			System.out.println("warning progard..." + " " + path + " " + faildString);
+			return;
+		}
 		
 		for(String list : rootDirectory.list() ) {
 			
@@ -53,7 +88,8 @@ public class JarAsmTest {
 //				System.out.println(childFile.getAbsolutePath());	
 				scanDirectory(childFile.getAbsolutePath());
 			} else {
-				scanFile(childFile.getAbsolutePath());
+				if(childFile.getName().replaceAll(".class", "").length() > 3 )
+					scanFile(childFile.getAbsolutePath());
 			}
 			
 		}
@@ -82,7 +118,7 @@ public class JarAsmTest {
 			FileInputStream fis = new FileInputStream(classFile);
 			
 			int api = Opcodes.V1_6;
-			
+			try{
 			ClassReader cr = new ClassReader(fis);
 			ClassWriter cw = new ClassWriter(cr,api);
 			ClassNode cn = new CustomClassNode(classFile.getName());
@@ -95,6 +131,10 @@ public class JarAsmTest {
 			FileOutputStream fos = new FileOutputStream(path);
 			fos.write(b);
 			fos.close();
+			}catch(Exception e) {
+				
+			}
+			
 //		}
 		}
 		catch(Exception e){

@@ -61,7 +61,7 @@ public class CustomClassNode extends ClassNode implements Opcodes{
 		
 		
 		
-		if (name.startsWith("<")) { // || (0<name.indexOf("$")) 달러 조건 삭제
+		if (name.startsWith("<") || name.length() <= 2) { // || (0<name.indexOf("$")) 달러 조건 삭제
 			return super.visitMethod(access, name, desc, signature, exceptions);
 		}
 
@@ -162,10 +162,12 @@ public class CustomClassNode extends ClassNode implements Opcodes{
 //					return dialogOnCreateAdapter;
 					return mv;
 				} else {
-				
-				OnCreateAdapter onCreateAdapter = new OnCreateAdapter(
-						Opcodes.ASM4, mv, access, name, desc);
-				return onCreateAdapter;
+				if(superName.indexOf("Activity") > 0) {
+					OnCreateAdapter onCreateAdapter = new OnCreateAdapter(
+							Opcodes.ASM4, mv, access, name, desc);
+					return onCreateAdapter;
+				}
+					return mv;
 				}
 			}
 		}
