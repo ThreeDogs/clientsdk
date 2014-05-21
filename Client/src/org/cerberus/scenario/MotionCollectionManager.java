@@ -20,7 +20,10 @@ public class MotionCollectionManager {
 		
 		boolean isSameEditText = false;
 		
-		if( lastMotion != null && motionData.getAction_type().equals("EditText") && lastMotion.getView().equals(motionData.getView()) )
+		if( lastMotion != null && lastMotion.getActivity_class().indexOf("RuntimeMotionInjector")>0 && lastMotion.getView().equals(motionData.getView()) && !lastMotion.getAction_type().equals("EditText") && motionData.getAction_type().equals(lastMotion.getAction_type()) )
+			return;
+
+		if( lastMotion != null && motionData.getAction_type().equals("EditText") && lastMotion.getAction_type().equals("EditText") && lastMotion.getView().equals(motionData.getView()))
 			isSameEditText = true;
 		
 		System.out.println(motionData);

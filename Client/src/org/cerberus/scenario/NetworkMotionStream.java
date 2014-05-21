@@ -14,6 +14,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.cerberus.config.ServerInfo;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -68,7 +69,7 @@ public class NetworkMotionStream implements AbstractMotionStream {
 					
 					HttpClient client = new DefaultHttpClient();
 					
-					String uri = "http://172.16.101.193:3000/api/v1/motion_events";
+					String uri = ServerInfo.ServerIp + "/api/v1/motion_events";
 					
 					HttpPost post = new HttpPost(uri);
 					
@@ -118,7 +119,7 @@ public class NetworkMotionStream implements AbstractMotionStream {
 					
 					HttpClient client = new DefaultHttpClient();
 					
-					String uri = "http://172.16.101.193:3000/api/v1/test_scenarios";
+					String uri = ServerInfo.ServerIp + "/api/v1/test_scenarios";
 					
 					HttpPost post = new HttpPost(uri);
 					
