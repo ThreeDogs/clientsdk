@@ -14,8 +14,8 @@ import scenario.org.cerberus.jarasm.CustomClassNode;
 
 public class JarAsmTest {
 
-	public static String apiKey;
-	
+	public static String apiKey = "";
+	public static String RealPath = "";
 	public static void main(String[] args) throws Exception {
 //		if(args!=null) {
 //			return;
@@ -33,6 +33,8 @@ public class JarAsmTest {
 			apiKey = args[1];
 		}
 
+		System.out.println("apkkey " + apiKey);
+		
 		if(args.length>=3 && args[2] != null) {
 			packageName = args[2];
 			while( packageName.indexOf(".") > 0 ) {
@@ -41,19 +43,27 @@ public class JarAsmTest {
 			
 		}
 		
-		if(!(new File(rootPath + "/" + packageName)).isDirectory() ) {
+		File file = new File(rootPath + "/" + packageName);
+		if(packageName.length() != 0) {
+			file = file.getParentFile();
+		}
+		
+		if(!file.isDirectory() ) {
 			System.out.println(rootPath + "/" + packageName + " is not directory");
 			return;
 		}
+		RealPath = rootPath;
+		scanDirectory(file.getAbsolutePath());
+
 		
-		scanDirectory((new File(rootPath + "/" + packageName)).getParentFile().getAbsolutePath());
 		
 		System.out.println("--------------- finish Instrumentation Byte Code ---------------");
-		System.out.println("root - " + (new File(rootPath + "/" + packageName)).getAbsolutePath() );
+		System.out.println("root - " + file.getAbsolutePath() );
 	}
 	
 	private static void scanDirectory(String path) throws Exception {
 
+		
 		File rootDirectory = new File(path);
 		
 		boolean isSingleName = false;
@@ -98,6 +108,7 @@ public class JarAsmTest {
 	}
 	
 	private static void scanFile(String path) throws Exception {
+	
 		try{
 //		System.out.println("	" + path);
 		//&& 0>path.indexOf("$")
@@ -117,7 +128,7 @@ public class JarAsmTest {
 			
 			FileInputStream fis = new FileInputStream(classFile);
 			
-			int api = Opcodes.V1_6;
+			int api = Opcodes.V1_5;
 			try{
 			ClassReader cr = new ClassReader(fis);
 			ClassWriter cw = new ClassWriter(cr,api);
@@ -132,12 +143,13 @@ public class JarAsmTest {
 			fos.write(b);
 			fos.close();
 			}catch(Exception e) {
-				
+				e.printStackTrace();
 			}
 			
 //		}
 		}
 		catch(Exception e){
+			System.out.println(path);
 			e.printStackTrace();
 		}
 	}

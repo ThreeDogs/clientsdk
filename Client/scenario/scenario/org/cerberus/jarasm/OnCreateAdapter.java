@@ -35,11 +35,11 @@ public class OnCreateAdapter extends AdviceAdapter {
 		mv.visitTypeInsn(NEW, "org/cerberus/index/CerberusAPI");
 		mv.visitInsn(DUP);
 		mv.visitVarInsn(ALOAD, 0);
-		mv.visitLdcInsn("");
+		mv.visitLdcInsn(JarAsmTest.apiKey);
 		mv.visitMethodInsn(INVOKESPECIAL, "org/cerberus/index/CerberusAPI", "<init>", "(Landroid/content/Context;Ljava/lang/String;)V");
 		mv.visitMethodInsn(INVOKEVIRTUAL, "org/cerberus/index/CerberusAPI", "start", "()V");
 		
-//		super.onMethodExit(opcode);
+		super.onMethodExit(opcode);
 		
 	}
 
