@@ -32,11 +32,17 @@ public class CerberusAPI {
     public static String apiKey;
     private Thread.UncaughtExceptionHandler mUncaughtExceptionHandler;
     public static int index = 0x1000;
-	
+	public boolean isRecording;
 	
 	public CerberusAPI(Context c, String apiKey) {
 		this.c = c;
 		this.apiKey = apiKey;
+		isRecording = true;
+	}
+	public CerberusAPI(Context c, String apiKey, boolean isRecording) {
+		this.c = c;
+		this.apiKey = apiKey;
+		this.isRecording = isRecording;
 	}
 	
 	public void start() {
@@ -66,8 +72,9 @@ public class CerberusAPI {
 
         });
 		
-		
-		c.startService(new Intent( c , AlwaysTopButtonService.class));
+		if (isRecording) {
+			c.startService(new Intent( c , AlwaysTopButtonService.class));
+		}
 	}
 	
 //	public void a(){

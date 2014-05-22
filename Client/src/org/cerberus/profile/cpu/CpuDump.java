@@ -37,7 +37,7 @@ public class CpuDump {
 //				        	System.out.println(line);
 //				        	String title = line.split(":")[0];
 //				        	String value = line.split(":")[1].replaceAll("kB", "").replaceAll(" ", "");
-				        	if(line.replaceAll(" ", "").endsWith("com.example.testandroid")){
+				        	if(line.replaceAll(" ", "").endsWith("com.autoschedule.proto")){
 				        		System.out.println(line);
 				        		
 				        		while(line.indexOf("  ") > 0) {

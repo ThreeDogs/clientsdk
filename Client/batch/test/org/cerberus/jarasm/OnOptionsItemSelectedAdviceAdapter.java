@@ -1,4 +1,4 @@
-package scenario.org.cerberus.jarasm;
+package test.org.cerberus.jarasm;
 
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;

@@ -22,6 +22,9 @@ public class MotionCollectionManager {
 		
 		if( lastMotion != null && lastMotion.getActivity_class().indexOf("RuntimeMotionInjector")>0 && lastMotion.getView().equals(motionData.getView()) && !lastMotion.getAction_type().equals("EditText") && motionData.getAction_type().equals(lastMotion.getAction_type()) )
 			return;
+		if( lastMotion != null && lastMotion.getView().equals(motionData.getView()) && lastMotion.getAction_type().equals("ListItemClick")) {
+			return;
+		}
 
 		if( lastMotion != null && motionData.getAction_type().equals("EditText") && lastMotion.getAction_type().equals("EditText") && lastMotion.getView().equals(motionData.getView()))
 			isSameEditText = true;
@@ -39,15 +42,18 @@ public class MotionCollectionManager {
 		Long timestamp = System.currentTimeMillis();
 		motionData.setTime_stamp(timestamp);
 		
-		if(!isSameEditText)
+		if(!isSameEditText){
 			stream.sendData(motionData);
+			if(addListener != null)
+	            addListener.addItem(Long.valueOf(timestamp));
+		}
 		else
 			stream.updateData(motionData);
+		
 		lastMotion = motionData;
 		System.out.println(stream);
 		
-		if(addListener != null)
-            addListener.addItem(Long.valueOf(timestamp));
+		
 	}
 
 	public AbstractMotionStream getStream() {

@@ -150,17 +150,16 @@ public class CustomClassNode extends ClassNode implements Opcodes{
 			return naviItemListenerAdviceAdapter;
 		}
 		
-//		if (name.equals("getView") && superName.toLowerCase().indexOf("adapter")>0 ) {
-//			ListItemOnClickChangeAdviceAdapter listItemOnClickChangeAdviceAdapter = new ListItemOnClickChangeAdviceAdapter(
-//					Opcodes.ASM4, mv, access, name, desc,
-//					fileName + "    list in onclick change adapter");
-//			System.out.println(fileName + " " + name + " " + "change getView in onclickListener");
-//			
-//			
-//			return listItemOnClickChangeAdviceAdapter;
-//		}
+		if (superName.toLowerCase().indexOf("adapter")>0 ) {
+			ListItemOnClickChangeAdviceAdapter listItemOnClickChangeAdviceAdapter = new ListItemOnClickChangeAdviceAdapter(
+					Opcodes.ASM4, mv, access, name, desc,
+					fileName + "    list in onclick change adapter",name);
+			System.out.println(fileName + " " + name + " " + "change getView in onclickListener");
+			
+			
+			return listItemOnClickChangeAdviceAdapter;
+		}
 		
-
 		if( 0<desc.indexOf("Landroid/view/View" ) && name.equals("onItemClick") && interfaces != null) {
 			for(int i = 0 ; i < this.interfaces.length; i++) {
 				if(interfaces[i].equals("android/widget/AdapterView$OnItemClickListener")) {
