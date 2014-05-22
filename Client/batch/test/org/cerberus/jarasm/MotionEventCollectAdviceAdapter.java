@@ -87,20 +87,20 @@ public class MotionEventCollectAdviceAdapter extends AdviceAdapter{
 		}
 		
 //		mv.visitVarInsn(ALOAD, 0);
-		mv.visitLdcInsn("Cerberus");
-		mv.visitLdcInsn("finish " + log);
-		mv.visitMethodInsn(INVOKESTATIC,
-				"android/util/Log",
-				"i", "(Ljava/lang/String;Ljava/lang/String;)I");
+//		mv.visitLdcInsn("Cerberus");
+//		mv.visitLdcInsn("finish " + log);
+//		mv.visitMethodInsn(INVOKESTATIC,
+//				"android/util/Log",
+//				"i", "(Ljava/lang/String;Ljava/lang/String;)I");
 		
 //		mv.visitEnd();
 		
-		mv.visitMethodInsn(INVOKESTATIC,
-				"org/cerberus/profile/memory/MemoryDump",
-				"getMemoryTrace", "()V");
+//		mv.visitMethodInsn(INVOKESTATIC,
+//				"org/cerberus/profile/memory/MemoryDump",
+//				"getMemoryTrace", "()V");
 		
 
-		CpuTraceWriter.EndWrite(mv);
+//		CpuTraceWriter.EndWrite(mv);
 		
 		super.onMethodExit(opcode);
 	}
