@@ -6,12 +6,13 @@
 package org.cerberus.scenario;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 
 import org.cerberus.event.collection.MotionCollector;
+import org.cerberus.evnetlistener.ListItemOnClickListener;
+import org.cerberus.evnetlistener.ListItemOnClickScanner;
 
 import android.content.Context;
-import android.graphics.Rect;
+import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -20,8 +21,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 
 public class RuntimeMotionInjector {
 
@@ -31,9 +33,9 @@ public class RuntimeMotionInjector {
 	public static void inJectEventStart(Context context1) {
 	}
 
-	public static void injectEvent(View v, Context context)
-    {
-        System.out.println(v);
+	public static void injectEvent(View v, Context context, int callCount) {
+		Log.d("cerberus", "called... injectEvent");
+		Log.d("cerberus", "scan " + v);
         if(v instanceof ViewGroup)
         {
             ViewGroup vGroup = (ViewGroup)v;
@@ -41,15 +43,26 @@ public class RuntimeMotionInjector {
             System.out.println((new StringBuilder("is ViewGroup (")).append(vGroup.getChildCount()).append(") ").append(v).toString());
             for(int i = 0; i < vGroup.getChildCount(); i++)
             {
-                System.out.println((new StringBuilder("call \n")).append(vGroup.getChildAt(i)).append("\n").append(v).toString());
-                injectEvent(vGroup.getChildAt(i), context);
+//                System.out.println((new StringBuilder("call \n")).append(vGroup.getChildAt(i)).append("\n").append(v).toString());
+                
+                if(vGroup instanceof AdapterView) {
+                	
+                	
+                } else {
+                	injectEvent(vGroup.getChildAt(i), context, callCount + 1);
+                }
+                
+                
             }
 
             try
             {
                 if(v != null)
                 {
-                	checkDrag(v, context);
+                	if(v instanceof AdapterView) {
+                		checkDrag(v, context);
+                	}
+                	
                 	checkClick(v,context);
                 }
             }
@@ -60,13 +73,30 @@ public class RuntimeMotionInjector {
             {
                 if(v != null)
                 {
-                	checkDrag(v, context);
+//                	checkDrag(v, context);
                    checkClick(v,context);
                 }
             }catch (Exception e) {
             	
             }
         }
+	}
+	
+	public static void injectEvent(final View v, final Context context)
+    {
+		
+		v.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+			
+			@Override
+			public void onGlobalLayout() {
+				Log.d("cerberus", "GlobalLayoutListener called..");
+				v.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+				RuntimeMotionInjector.injectEvent(v, context);
+				
+			}
+		});
+		
+		injectEvent(v, context, 0);
     }
 	
 	private static void checkDrag(View v, final Context c) {
@@ -110,7 +140,7 @@ public class RuntimeMotionInjector {
                 }
                 catch(Exception e)
                 {
-                	
+                	 Log.d("cerberus", "inject Touch Listener " + v);
                 	v.setOnTouchListener(
                 			new OnTouchListener(){
                 	            private boolean moving = false;//stupid state
@@ -124,10 +154,16 @@ public class RuntimeMotionInjector {
                 	            public boolean onTouch(View v, MotionEvent event) {
                 	                switch( event.getAction() ){
                 	                case MotionEvent.ACTION_DOWN:
-                	                    x = (int)event.getX();
-                	                    y = (int)event.getY();
+                	                    x = 0;
+                	                    y = 0;
                 	                    return false;
                 	                case MotionEvent.ACTION_MOVE:
+                	                	
+                	                	if(x==0 && y ==0) {
+                	                		x = (int)event.getX();
+                 	                        y = (int)event.getY();
+                	                	}
+                	                	
                 	                	moving = true;
                 	                    if( moving ){
                 	                        x_new = (int)event.getX();
@@ -138,7 +174,10 @@ public class RuntimeMotionInjector {
                 	                    
                 	                    if(moving)
                 	                    	 try{
+                	                    		 
                      	                    	MotionCollector.getInstance().putMotion(new MotionVO(Long.valueOf(System.currentTimeMillis()), getClass().getName(), "drag", x+","+y+","+x_new+","+y_new, v.getResources().getResourceEntryName(v.getId())));
+                     	                    	x=0;
+                    	                    	y=0;
                      	                    }catch (Exception e) {
          										try{
                      	                    	System.err.println(e.getMessage() + "");
@@ -157,8 +196,7 @@ public class RuntimeMotionInjector {
                 }
             } else
             {
-                System.out.println("onListener is null");
-                System.out.println("make onClickListener");
+            	Log.d("cerberus", "inject Touch Listener " + v);
                 v.setOnTouchListener(
             			new OnTouchListener(){
             	            private boolean moving = false;//stupid state
@@ -172,10 +210,14 @@ public class RuntimeMotionInjector {
             	            public boolean onTouch(View v, MotionEvent event) {
             	                switch( event.getAction() ){
             	                case MotionEvent.ACTION_DOWN:
-            	                    x = (int)event.getX();
-            	                    y = (int)event.getY();
+//            	                    x = (int)event.getX();
+//            	                    y = (int)event.getY();
             	                    return false;
             	                case MotionEvent.ACTION_MOVE:
+            	                	if(x==0 && y ==0) {
+            	                		x = (int)event.getX();
+             	                        y = (int)event.getY();
+            	                	}
             	                	moving = true;
             	                    if( moving ){
             	                        x_new = (int)event.getX();
@@ -187,6 +229,8 @@ public class RuntimeMotionInjector {
             	                    if(moving)
             	                    try{
             	                    	MotionCollector.getInstance().putMotion(new MotionVO(Long.valueOf(System.currentTimeMillis()), getClass().getName(), "drag", x+","+y+","+x_new+","+y_new, v.getResources().getResourceEntryName(v.getId())));
+            	                    	x=0;
+            	                    	y=0;
             	                    }catch (Exception e) {
 										try{
             	                    	System.err.println(e.getMessage() + "");
@@ -263,6 +307,10 @@ public class RuntimeMotionInjector {
                 f2.setAccessible(true);
                 final OnClickListener thisListener = (OnClickListener)f2.get(mListenerInfo);
 //                System.out.println(Arrays.toString(thisListener.getClass().getDeclaredFields()));
+                
+                if(thisListener instanceof ListItemOnClickListener || thisListener instanceof ListItemOnClickScanner) {
+                	return;
+                }
                 try
                 {
                     if(thisListener.getClass().getDeclaredField("CERBERUS_FLAG_GENERATE") == null)
@@ -275,7 +323,7 @@ public class RuntimeMotionInjector {
 						
                         public void onClick(View view)
                         {
-                            Log.i("cerberus", "TestLogg...........");
+                            Log.i("cerberus", "TestLogg..........." + view);
                             
                             try{
                                 MotionCollector.getInstance().putMotion(new MotionVO(Long.valueOf(System.currentTimeMillis()), getClass().getName(), "Click", "", view.getResources().getResourceEntryName(view.getId())));
@@ -289,7 +337,7 @@ public class RuntimeMotionInjector {
                             
                             if(thisListener !=null)
                             	thisListener.onClick(view);
-//                            RuntimeMotionInjector.injectEvent((FrameLayout) view.getRootView(), c);
+                            RuntimeMotionInjector.injectEvent( view.getRootView(), c);
                         }
 
                         private int CERBERUS_FLAG_GENERATE = 1;
@@ -304,7 +352,7 @@ public class RuntimeMotionInjector {
 					
                     public void onClick(View view)
                     {
-                        Log.i("cerberus", "TestLogg...........");
+                    	Log.i("cerberus", "TestLogg22..........." + view);
                         try{
                             MotionCollector.getInstance().putMotion(new MotionVO(Long.valueOf(System.currentTimeMillis()), getClass().getName(), "Click", "", view.getResources().getResourceEntryName(view.getId())));
 	                    }catch (Exception e) {
@@ -313,7 +361,7 @@ public class RuntimeMotionInjector {
 							}catch (Exception e2) {
 							}
 						}
-//                        RuntimeMotionInjector.injectEvent((FrameLayout) view.getRootView(), c);
+                        RuntimeMotionInjector.injectEvent( view.getRootView(), c);
                     }
 
                     private int CERBERUS_FLAG_GENERATE = 1;

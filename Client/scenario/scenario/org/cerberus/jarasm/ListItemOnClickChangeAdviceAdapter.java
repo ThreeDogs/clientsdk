@@ -38,10 +38,7 @@ public class ListItemOnClickChangeAdviceAdapter extends AdviceAdapter{
 				
 			} else {
 				
-				mv.visitVarInsn(ILOAD, 1);
-//			mv.visitMethodInsn(INVOKESTATIC, "java/lang/Integer", "valueOf", "(I)Ljava/lang/Integer;");
-				mv.visitVarInsn(ALOAD, 3);
-				mv.visitMethodInsn(INVOKESTATIC, "org/cerberus/evnetlistener/ListItemOnClickFactory", "newInstance", "(Landroid/view/View$OnClickListener;Ljava/lang/Object;Ljava/lang/Object;)Lorg/cerberus/evnetlistener/ListItemOnClickListener;");
+				mv.visitMethodInsn(INVOKESTATIC, "org/cerberus/evnetlistener/ListItemOnClickFactory", "newInstanceClickScanner", "(Landroid/view/View$OnClickListener;)Landroid/view/View$OnClickListener;");
 			}
 			
 		}

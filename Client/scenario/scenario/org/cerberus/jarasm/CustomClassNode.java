@@ -1,18 +1,13 @@
 package scenario.org.cerberus.jarasm;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
-import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.MethodNode;
 
-import scenario.org.cerberus.jarasm.actionbar.ActionbarFragmentOnStartAdviceAdapter;
 import scenario.org.cerberus.jarasm.actionbar.NaviItemListenerAdviceAdapter;
 
 public class CustomClassNode extends ClassNode implements Opcodes{
@@ -27,27 +22,6 @@ public class CustomClassNode extends ClassNode implements Opcodes{
 		this.fileName = fileName;
 	}
 
-	@Override
-	public void visitSource(String file, String debug) {
-//		System.out.println("visitSource  " + file + " " + debug);
-
-		super.visitSource(file, debug);
-	}
-
-	@Override
-	public void visitOuterClass(String owner, String name, String desc) {
-		// System.out.println("visitOuterClass  " + owner + " " + name + " " +
-		// desc);
-		super.visitOuterClass(owner, name, desc);
-	}
-
-	@Override
-	public void visitInnerClass(String name, String outerName,
-			String innerName, int access) {
-		// System.out.println("visitInnerClass  " + name + " " + outerName + " "
-		// + innerName + " " + access);
-		super.visitInnerClass(name, outerName, innerName, access);
-	}
 
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc,
@@ -271,7 +245,35 @@ public class CustomClassNode extends ClassNode implements Opcodes{
 								"OnClickListener onClick");
 						System.out.println(fileName + " " + name + " " + "add OnClickListener");
 						return motionEventCollectAdviceAdapter;
+//						android.content.DialogInterface.OnClickListener
+					} else if(interfaces[i].indexOf("DialogInterface") >= 0) {
+						DialogOnClickAdviceAdapter dialogOnClickAdviceAdapter = new DialogOnClickAdviceAdapter(Opcodes.ASM4, mv, access, name, desc);
+						System.out.println(fileName + " " + name + " " + "add DialogOnClick");
+						return dialogOnClickAdviceAdapter;
+						
 					}
+				}
+			}
+			
+			for (int i = 0; i < this.interfaces.length; i++) {
+				if (interfaces[i]
+						.equals("android/view/View$OnClickListener")) {
+//					System.out.println("onClick----  " + fileName);
+//					System.out.println("visitMethod - " + access + " "
+//							+ name + " " + desc + " " + signature + " "
+//							+ Arrays.toString(exceptions) + " "
+//							+ Arrays.toString(this.interfaces) + superName);
+					MotionEventCollectAdviceAdapter motionEventCollectAdviceAdapter = new MotionEventCollectAdviceAdapter(
+							Opcodes.ASM4, mv, access, name, desc,
+							"OnClickListener onClick");
+					System.out.println(fileName + " " + name + " " + "add OnClickListener");
+					return motionEventCollectAdviceAdapter;
+//					android.content.DialogInterface.OnClickListener
+				} else if(interfaces[i].indexOf("DialogInterface") >= 0) {
+					DialogOnClickAdviceAdapter dialogOnClickAdviceAdapter = new DialogOnClickAdviceAdapter(Opcodes.ASM4, mv, access, name, desc);
+					System.out.println(fileName + " " + name + " " + "add DialogOnClick");
+					return dialogOnClickAdviceAdapter;
+					
 				}
 			}
 
@@ -470,12 +472,12 @@ public class CustomClassNode extends ClassNode implements Opcodes{
 				mv.visitVarInsn(ALOAD, 2);
 				mv.visitMethodInsn(INVOKESPECIAL, "android/app/Activity", "onKeyDown", "(ILandroid/view/KeyEvent;)Z");
 				mv.visitInsn(IRETURN);
-				Label l13 = new Label();
-				mv.visitLabel(l13);
-				mv.visitLocalVariable("this", "Lcom/example/testandroid/MainActivity;", null, l0, l13, 0);
-				mv.visitLocalVariable("keyCode", "I", null, l0, l13, 1);
-				mv.visitLocalVariable("event", "Landroid/view/KeyEvent;", null, l0, l13, 2);
-				mv.visitMaxs(8, 3);
+//				Label l13 = new Label();
+//				mv.visitLabel(l13);
+//				mv.visitLocalVariable("this", "Lcom/example/testandroid/MainActivity;", null, l0, l13, 0);
+//				mv.visitLocalVariable("keyCode", "I", null, l0, l13, 1);
+//				mv.visitLocalVariable("event", "Landroid/view/KeyEvent;", null, l0, l13, 2);
+//				mv.visitMaxs(8, 3);
 				mv.visitEnd();
 				
 			}

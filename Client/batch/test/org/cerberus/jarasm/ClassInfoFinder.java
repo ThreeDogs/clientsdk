@@ -9,6 +9,9 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 
+import profiling.org.cerberus.jarasm.CustomClassNode;
+import profiling.org.cerberus.jarasm.JarAsmTest;
+
 public class ClassInfoFinder  extends ClassNode implements Opcodes {
 	
 	public static ClassNode getInstance(String fileName) throws Exception {

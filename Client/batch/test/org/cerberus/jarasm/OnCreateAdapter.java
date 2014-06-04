@@ -7,7 +7,7 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.AdviceAdapter;
 
-import scenario.org.cerberus.jarasm.JarAsmTest;
+import profiling.org.cerberus.jarasm.JarAsmTest;
 
 public class OnCreateAdapter extends AdviceAdapter {
 
@@ -79,15 +79,24 @@ public class OnCreateAdapter extends AdviceAdapter {
 //		mv.visitMethodInsn(INVOKESPECIAL, "org/cerberus/index/CerberusAPI", "<init>", "(Landroid/content/Context;Ljava/lang/String;)V");
 //		mv.visitMethodInsn(INVOKEVIRTUAL, "org/cerberus/index/CerberusAPI", "start", "()V");
 		
+//		mv.visitTypeInsn(NEW, "org/cerberus/index/CerberusAPI");
+//		mv.visitInsn(DUP);
+//		mv.visitVarInsn(ALOAD, 0);
+//		mv.visitMethodInsn(INVOKEVIRTUAL, "com/example/testandroid/MainActivity", "getApplicationContext", "()Landroid/content/Context;");
+//		mv.visitLdcInsn(JarAsmTest.apiKey);
+//		mv.visitInsn(ICONST_0);
+//		mv.visitMethodInsn(INVOKESPECIAL, "org/cerberus/index/CerberusAPI", "<init>", "(Landroid/content/Context;Ljava/lang/String;Z)V");
+//		mv.visitMethodInsn(INVOKEVIRTUAL, "org/cerberus/index/CerberusAPI", "start", "()V");
+//		
+		
 		mv.visitTypeInsn(NEW, "org/cerberus/index/CerberusAPI");
 		mv.visitInsn(DUP);
 		mv.visitVarInsn(ALOAD, 0);
-		mv.visitMethodInsn(INVOKEVIRTUAL, "com/example/testandroid/MainActivity", "getApplicationContext", "()Landroid/content/Context;");
+		mv.visitMethodInsn(INVOKEVIRTUAL, "android/content/Context", "getApplicationContext", "()Landroid/content/Context;");
 		mv.visitLdcInsn(JarAsmTest.apiKey);
 		mv.visitInsn(ICONST_0);
 		mv.visitMethodInsn(INVOKESPECIAL, "org/cerberus/index/CerberusAPI", "<init>", "(Landroid/content/Context;Ljava/lang/String;Z)V");
 		mv.visitMethodInsn(INVOKEVIRTUAL, "org/cerberus/index/CerberusAPI", "start", "()V");
-		
 		super.onMethodExit(opcode);
 		
 	}

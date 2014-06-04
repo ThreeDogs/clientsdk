@@ -29,7 +29,10 @@ public class NetworkMotionStream implements AbstractMotionStream {
 	
 	@Override
 	public void sendData(MotionVO data) {
-		System.out.println(data + ".add");
+//		System.out.println(data + ".add");
+		
+		Log.d("cerberus", "add Motion " + data);
+		
 		motionList.add(data);
 		
 	}
@@ -39,7 +42,9 @@ public class NetworkMotionStream implements AbstractMotionStream {
 		motionList.get(motionList.size() -1 ).setSleep(data.getSleep()); ;
 		motionList.get(motionList.size() -1 ).setParam(data.getParam()); ;
 		
-		System.out.println(motionList.toString());
+		Log.d("cerberus", "update Motion " + data);
+		
+//		System.out.println(motionList.toString());
 	}
 	
 
@@ -100,6 +105,16 @@ public class NetworkMotionStream implements AbstractMotionStream {
 				
 				return null;
 			}
+
+			@Override
+			protected void onPostExecute(Object result) {
+				// TODO Auto-generated method stub
+				super.onPostExecute(result);
+				
+				android.os.Process.killProcess(android.os.Process.myPid());
+			}
+			
+			
 			
 		}.execute();
 	}

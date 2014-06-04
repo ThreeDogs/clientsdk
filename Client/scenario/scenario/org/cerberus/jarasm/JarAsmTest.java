@@ -128,14 +128,17 @@ public class JarAsmTest {
 			
 			FileInputStream fis = new FileInputStream(classFile);
 			
-			int api = Opcodes.V1_5;
+			int api = Opcodes.V1_6;
+//			int api = ClassWriter.COMPUTE_MAXS;
 			try{
 			ClassReader cr = new ClassReader(fis);
 			ClassWriter cw = new ClassWriter(cr,api);
+			
+			
 			ClassNode cn = new CustomClassNode(classFile.getName());
 			
-			
 			cr.accept(cn, ClassReader.SKIP_FRAMES);
+//			cr.accept(cn, ClassReader.EXPAND_FRAMES);
 			cn.accept(cw);
 			
 			byte[] b = cw.toByteArray();

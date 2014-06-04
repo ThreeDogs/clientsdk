@@ -1,7 +1,14 @@
 package org.cerberus.service;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.cerberus.event.collection.MotionCollector;
 import org.cerberus.index.CerberusAPI;
+import org.cerberus.profile.crash.CrashDump;
 import org.cerberus.scenario.NetworkMotionStream;
 
 import android.app.Service;
@@ -35,7 +42,7 @@ public class AlwaysTopButtonService extends Service {
 //			return;
 //		}
 		System.out.println("------------------------");
-		Button widgetBtn = new Button(this);
+		final Button widgetBtn = new Button(this);
 		widgetBtn.setHeight(50);
 //		widgetBtn.setId(index);
 		widgetBtn.setWidth(50);
@@ -78,7 +85,11 @@ public class AlwaysTopButtonService extends Service {
                     {
                         CerberusAPI.status_ = Integer.valueOf(0);
                         ((NetworkMotionStream)MotionCollector.getInstance().getStream()).sendNetworkData();
-                        System.out.println("--");
+                        
+                        WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+                		wm.removeView(widgetBtn);
+                        
+                        
                     } else
                     {
                         CerberusAPI.status_ = Integer.valueOf(1);
@@ -86,6 +97,27 @@ public class AlwaysTopButtonService extends Service {
                         Toast toast = Toast.makeText(getApplicationContext(), "Start scenario recording...", 1);
                         toast.setGravity(17, 0, 0);
                         toast.show();
+                        final Thread.UncaughtExceptionHandler mUncaughtExceptionHandler;
+                        mUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+                        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+
+                            public void uncaughtException(Thread t, Throwable e)
+                            {
+//                              CerberusAPI.status_ = Integer.valueOf(0);
+                                ((NetworkMotionStream)MotionCollector.getInstance().getStream()).sendNetworkData();
+                                try {
+									Thread.sleep(5000);
+								} catch (InterruptedException e1) {
+									e1.printStackTrace();
+								}
+                                WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+                        		wm.removeView(widgetBtn);
+                        		
+                                mUncaughtExceptionHandler.uncaughtException(t, e);
+                            }
+
+
+                        });
                     }
                 return false;
             }

@@ -3,6 +3,8 @@ package scenario.org.cerberus.jarasm;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.AdviceAdapter;
 
+import scenario.org.cerberus.jarasm.JarAsmTest;
+
 public class OnStartAdviceAdapter extends AdviceAdapter {
 
 private String log;

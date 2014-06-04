@@ -12,6 +12,8 @@
 	<classpathentry kind="src" path="testbedserver"/>
 	<classpathentry kind="src" path="manifes_edit"/>
 	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="src" path="profiling"/>
+	<classpathentry kind="src" path="export_scenario"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
@@ -55,6 +57,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/commons-lang3-3.3.1.jar"/>
 	<classpathentry kind="lib" path="lib/ezmorph-1.0.6.jar"/>
 	<classpathentry kind="lib" path="lib/json-lib-2.0-jdk15.jar"/>
-	<classpathentry kind="lib" path="/AutoScheduleProject/libs/android-support-v4.jar"/>
+	<classpathentry kind="lib" path="/BitmapFun/libs/android-support-v4.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

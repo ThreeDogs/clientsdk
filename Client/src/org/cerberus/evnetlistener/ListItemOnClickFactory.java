@@ -9,4 +9,8 @@ public class ListItemOnClickFactory {
 		return new ListItemOnClickListener(l, i, vg);
 	}
 	
+	public static OnClickListener newInstanceClickScanner(OnClickListener l){
+		return new ListItemOnClickScanner(l);
+	}
+	
 }

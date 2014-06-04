@@ -3,6 +3,8 @@ package test.org.cerberus.jarasm;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.AdviceAdapter;
 
+import profiling.org.cerberus.jarasm.CpuTraceWriter;
+
 public class MotionEventCollectAdviceAdapter extends AdviceAdapter{
 
 	private String log;

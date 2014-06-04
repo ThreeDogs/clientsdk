@@ -9,7 +9,8 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 
-import test.org.cerberus.jarasm.CustomClassNode;
+import profiling.org.cerberus.jarasm.CpuDump$1Dump;
+import profiling.org.cerberus.jarasm.CustomClassNode;
 
 
 public class JarAsmTest {

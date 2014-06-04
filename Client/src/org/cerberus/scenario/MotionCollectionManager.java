@@ -10,6 +10,8 @@ public class MotionCollectionManager {
 	private AbstractMotionStream stream;
 	private MotionAddListener addListener;
 	private MotionVO lastMotion;
+	private boolean callCheck = false;
+	
 	
 	
 	public MotionCollectionManager(AbstractMotionStream stream) {
@@ -20,12 +22,36 @@ public class MotionCollectionManager {
 		
 		boolean isSameEditText = false;
 		
-		if( lastMotion != null && lastMotion.getActivity_class().indexOf("RuntimeMotionInjector")>0 && lastMotion.getView().equals(motionData.getView()) && !lastMotion.getAction_type().equals("EditText") && motionData.getAction_type().equals(lastMotion.getAction_type()) )
-			return;
-		if( lastMotion != null && lastMotion.getView().equals(motionData.getView()) && lastMotion.getAction_type().equals("ListItemClick")) {
-			return;
+		
+		if(motionData!=null)
+			Log.d("cerbeurs_debbugger", "" + motionData.toString() );
+		
+		if( lastMotion != null && lastMotion.getActivity_class().indexOf("RuntimeMotionInjector")>0 && 
+				lastMotion.getView().equals(motionData.getView()) && 
+				motionData.getAction_type().equals(lastMotion.getAction_type())  &&
+				!(motionData.getActivity_class().indexOf("RuntimeMotionInjector")>0)
+				)
+		{
+			if(!lastMotion.getAction_type().equals("EditText") && !lastMotion.getAction_type().equals("drag")){
+				if(!lastMotion.getAction_type().equals("Click")) {
+					
+				}
+					return;
+				}
+		}
+		
+		
+		if( lastMotion != null && lastMotion.getView().equals(motionData.getView()) && lastMotion.getAction_type().equals("ListItemClick") && lastMotion.getActivity_class().indexOf("cerberus")>0) {
+			if(callCheck == false) {
+				callCheck = true;
+				return;
+			} else {
+				callCheck = false;
+			}
+			
 		}
 
+		
 		if( lastMotion != null && motionData.getAction_type().equals("EditText") && lastMotion.getAction_type().equals("EditText") && lastMotion.getView().equals(motionData.getView()))
 			isSameEditText = true;
 		
@@ -34,7 +60,7 @@ public class MotionCollectionManager {
 		if(lastSleepTime == null) {
 			lastSleepTime = System.currentTimeMillis();
 		} else {
-			motionData.setSleep(System.currentTimeMillis() - lastSleepTime + lastSleepTime);
+			motionData.setSleep(System.currentTimeMillis() - lastSleepTime);
 			lastSleepTime = System.currentTimeMillis();
 		}
 		if(!isSameEditText)
@@ -52,7 +78,7 @@ public class MotionCollectionManager {
 		
 		lastMotion = motionData;
 		System.out.println(stream);
-		
+		callCheck = false;
 		
 	}
 
@@ -67,6 +93,10 @@ public class MotionCollectionManager {
 	public void setMotionAddListener(MotionAddListener listener) {
 		this.addListener = listener;
 	}
+	
+//	public MotionAddListener getMotionAddListener() {
+//		return addListener;
+//	}
 	
 	public static interface MotionAddListener {
 		public abstract void addItem(Long id);
