@@ -31,8 +31,8 @@ public class NetworkDump {
 				map.put("rx", (totalRx - lastRx));
 				map.put("tx", (totalTx - lastTx));
 				NetworkDataList.getInstance().add(map);
-//				Log.i("cerberus", "Rx " + (totalRx - lastRx) +"byte");
-//				Log.i("cerberus", "Tx " + (totalTx - lastTx) +"byte");
+				Log.i("cerberus_network", "Rx " + (totalRx - lastRx) +"byte");
+				Log.i("cerberus_network", "Tx " + (totalTx - lastTx) +"byte");
 				
 				lastRx = totalRx;
 				lastTx = totalTx;
