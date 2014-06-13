@@ -1,13 +1,19 @@
 package manifest_edit.cerberus.manifest;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import org.dom4j.Attribute;
 import org.dom4j.Document;
@@ -20,8 +26,7 @@ import org.dom4j.io.XMLWriter;
 
 public class Main {
 
-	public static void main(String[] args) throws DocumentException,
-			IOException {
+	public static void main(String[] args) throws Exception {
 //		/Users/nohsunghyun/SoftwareMaestro/cerberus-back/lib/test_apk_generator
 //		/Users/nohsunghyun/SoftwareMaestro/cerberus-back/public/uploads/apk/apk/12/AutoScheduleProject/AndroidManifest.xml 
 		String fileName = args[0];
@@ -100,6 +105,12 @@ public class Main {
 					alwaysTopService.addAttribute("android:name",
 							"org.cerberus.service.AlwaysTopButtonService");
 
+					// <service
+					// android:name="edu.umich.PowerTutor.service.UMLoggerService"
+					// />
+					Element powerTutorLoggerService = application.addElement("service");
+					powerTutorLoggerService.addAttribute("android:name", "edu.umich.PowerTutor.service.UMLoggerService");
+					
 					boolean isUsesLibrary = false;
 					for (Iterator j = root.elementIterator("application"); j
 							.hasNext();) {
@@ -143,19 +154,54 @@ public class Main {
 			// <uses-permission
 			// android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
+			
+//		    <uses-permission android:name="android.permission.INTERNET" />
+//		    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+//		    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+//		    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+//		    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+//		    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+			
+			//check and append permission
 			boolean isSystemAlterWindow = false;
 			boolean isInternet = false;
 			boolean isWriteExternalStorage = false;
+			boolean isReceiveBootCompleted = false;
+			boolean isAccessNetworkState = false;
+			boolean isReadPhoneState = false;
+			boolean isAccessWifiState = false;
+			boolean isAccessFineLocation = false;
+			
 			for (String permission : permissionList) {
 				if (permission.equals("android.permission.SYSTEM_ALERT_WINDOW")) {
 					isSystemAlterWindow = true;
 				}
-				if (permission.equals("android.permission.INTERNET")) {
+				else if (permission.equals("android.permission.INTERNET")) {
 					isInternet = true;
 				}
-				if (permission
+				else if (permission
 						.equals("android.permission.WRITE_EXTERNAL_STORAGE")) {
 					isWriteExternalStorage = true;
+				}
+				else if (permission
+						.equals("android.permission.ACCESS_FINE_LOCATION")) {
+					isAccessFineLocation = true;
+				}
+				else if (permission
+						.equals("android.permission.ACCESS_WIFI_STATE")) {
+					isAccessWifiState = true;
+				}
+				else if (permission
+						.equals("android.permission.READ_PHONE_STATE")) {
+					isReadPhoneState = true;
+				}
+				else if (permission
+						.equals("android.permission.ACCESS_NETWORK_STATE")) {
+					isAccessNetworkState = true;
+				}
+				else if (permission
+						.equals("android.permission.RECEIVE_BOOT_COMPLETED")) {
+					isReceiveBootCompleted = true;
 				}
 			}
 
@@ -173,6 +219,31 @@ public class Main {
 				Element nElement = newRoot.addElement("uses-permission");
 				nElement.addAttribute("android:name",
 						"android.permission.WRITE_EXTERNAL_STORAGE");
+			}
+			if (!isAccessFineLocation) {
+				Element nElement = newRoot.addElement("uses-permission");
+				nElement.addAttribute("android:name",
+						"android.permission.ACCESS_FINE_LOCATION");
+			}
+			if (!isAccessWifiState) {
+				Element nElement = newRoot.addElement("uses-permission");
+				nElement.addAttribute("android:name",
+						"android.permission.ACCESS_WIFI_STATE");
+			}
+			if (!isReadPhoneState) {
+				Element nElement = newRoot.addElement("uses-permission");
+				nElement.addAttribute("android:name",
+						"android.permission.READ_PHONE_STATE");
+			}
+			if (!isAccessNetworkState) {
+				Element nElement = newRoot.addElement("uses-permission");
+				nElement.addAttribute("android:name",
+						"android.permission.ACCESS_NETWORK_STATE");
+			}
+			if (!isReceiveBootCompleted) {
+				Element nElement = newRoot.addElement("uses-permission");
+				nElement.addAttribute("android:name",
+						"android.permission.RECEIVE_BOOT_COMPLETED");
 			}
 
 			newRoot.add((Element) application.clone());
@@ -264,16 +335,79 @@ public class Main {
 			writer.write(newDocument);
 			writer.close();
 			
-			// Pretty print the document to System.out
-			OutputFormat format = OutputFormat.createPrettyPrint();
-			writer = new XMLWriter(System.out, format);
-			writer.write(document);
-			// Compact format to System.out
-			format = OutputFormat.createCompactFormat();
-			writer = new XMLWriter(System.out, format);
-			writer.write(document);
+//			// Pretty print the document to System.out
+//			OutputFormat format = OutputFormat.createPrettyPrint();
+//			writer = new XMLWriter(System.out, format);
+//			writer.write(document);
+//			// Compact format to System.out
+//			format = OutputFormat.createCompactFormat();
+//			writer = new XMLWriter(System.out, format);
+//			writer.write(document);
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//-----------------------------
+			
 			
 		}
+		scanLayout(filePath + "/" + fileName
+				+ "/res/layout/");
+		
+//		changeImageView("/Users/nohsunghyun/git/clientsdk1/Client/study/activity_task_new_amount.xml");
+		
 	}
+	
+	public static void scanLayout(String layoutPath) throws Exception {
+		
+		File directory = new File(layoutPath);
+		
+		
+		for(String file :directory.list()) {
+			changeImageView(layoutPath + "/" + file);
+		}
+		
+	}
+	
+	public static void changeImageView(String filePath) throws Exception {
+		{
+			File file = new File(filePath);
 
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8") );
+
+			String s = null;
+			StringBuilder sb = new StringBuilder();
+			
+			while((s=br.readLine())!=null) {
+				sb.append(s);
+			}
+			
+			br.close();
+			
+			String r = sb.toString();
+			
+			System.out.println(r);
+			if(!(r.indexOf("<ImageView") >=0)) {
+				return;
+			}
+			
+			String result = r.replaceAll("<ImageView ", "<org.cerberus.profile.drawtime.CerberusImageView ");
+			
+			System.out.println(result);
+
+			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
+			outputStreamWriter.write(result);
+			outputStreamWriter.flush();
+			outputStreamWriter.close();
+
+		}
+		
+	}
+	
 }
