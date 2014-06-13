@@ -12,8 +12,8 @@ public class NetworkDump {
 	private static long lastTx = 0;
 	
 	public NetworkDump() {
-		lastRx = TrafficStats.getTotalRxBytes();
-		lastTx = TrafficStats.getTotalTxBytes();
+		lastRx = TrafficStats.getMobileRxBytes();
+		lastTx = TrafficStats.getMobileRxBytes();
 	}
 	
 	public static void getNetworkTrace() {
@@ -23,13 +23,13 @@ public class NetworkDump {
 			@Override
 			public void run() {
 
-				long totalRx = TrafficStats.getTotalRxBytes();
-				long totalTx = TrafficStats.getTotalTxBytes();
+				long totalRx = TrafficStats.getMobileRxBytes();
+				long totalTx = TrafficStats.getMobileTxBytes();
 				
 				Map map = new HashMap();
-				map.put("time_stamp", System.currentTimeMillis());
-				map.put("rx", (totalRx - lastRx));
-				map.put("tx", (totalTx - lastTx));
+				map.put("client_timestamp", System.currentTimeMillis());
+				map.put("response_size", (totalRx - lastRx));
+				map.put("request_size", (totalTx - lastTx));
 				NetworkDataList.getInstance().add(map);
 				Log.i("cerberus_network", "Rx " + (totalRx - lastRx) +"byte");
 				Log.i("cerberus_network", "Tx " + (totalTx - lastTx) +"byte");

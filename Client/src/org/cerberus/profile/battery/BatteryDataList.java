@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+//Use PowerTutor
 public class BatteryDataList {
 
 	private static List<Map> instance;

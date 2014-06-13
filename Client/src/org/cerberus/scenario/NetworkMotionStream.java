@@ -3,7 +3,9 @@ package org.cerberus.scenario;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -15,6 +17,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.cerberus.config.ServerInfo;
+import org.cerberus.event.collection.MotionCollector;
+import org.cerberus.util.ServerIpUtil;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -81,6 +85,22 @@ public class NetworkMotionStream implements AbstractMotionStream {
 					List params = new ArrayList();
 					
 					params.add(new BasicNameValuePair("test_scenario_id", testScenarioId ));
+					
+					 List motionList = new ArrayList();
+				        for(MotionVO motion : ((NetworkMotionStream)MotionCollector.getInstance().getStream()).getMotionList()) {
+				        	
+				        	Map motionMap = new HashMap();
+				        	
+				        	motionMap.put("activity_class", motion.getActivity_class());
+				        	motionMap.put("param", motion.getParam());
+				        	motionMap.put("view", motion.getView());
+				        	motionMap.put("sleep", motion.getSleep());
+				        	motionMap.put("action_type", motion.getAction_type());
+				        	motionMap.put("client_timestamp", motion.getTime_stamp());
+				        	
+				        	motionList.add(motionMap);
+				        }
+					
 					params.add(new BasicNameValuePair("motion_events", gson.toJson(motionList) ));
 					
 					UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, HTTP.UTF_8);
@@ -134,12 +154,16 @@ public class NetworkMotionStream implements AbstractMotionStream {
 					
 					HttpClient client = new DefaultHttpClient();
 					
-					String uri = ServerInfo.ServerIp + "/api/v1/test_scenarios";
+					String uri = ServerIpUtil.getServerIp() + "/api/v1/test_scenarios";
 					
 					HttpPost post = new HttpPost(uri);
 					
 					List params = new ArrayList();
 					params.add(new BasicNameValuePair("project_id", apkKey ));
+					params.add(new BasicNameValuePair("activity_name", "mainActivity"));
+					params.add(new BasicNameValuePair("package_name", "com.test.test"));
+					
+					
 					UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, HTTP.UTF_8);
 					
 					post.setEntity(ent);

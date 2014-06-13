@@ -109,7 +109,7 @@ public class RuntimeMotionInjector {
         }
         catch(NoSuchFieldException e)
         {
-            System.out.println("NoSuchMethod - mListenerInfo");
+//            System.out.println("NoSuchMethod - mListenerInfo");
             try
             {
                 f = View.class.getDeclaredField("mListenerInfo");
@@ -117,7 +117,7 @@ public class RuntimeMotionInjector {
             }
             catch(NoSuchFieldException e1)
             {
-                e1.printStackTrace();
+//                e1.printStackTrace();
             }
         }
 		
@@ -272,7 +272,7 @@ public class RuntimeMotionInjector {
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 	}
 	
@@ -287,7 +287,7 @@ public class RuntimeMotionInjector {
         }
         catch(NoSuchFieldException e)
         {
-            System.out.println("NoSuchMethod - mListenerInfo");
+//            System.out.println("NoSuchMethod - mListenerInfo");
             try
             {
                 f = View.class.getDeclaredField("mListenerInfo");
@@ -295,7 +295,7 @@ public class RuntimeMotionInjector {
             }
             catch(NoSuchFieldException e1)
             {
-                e1.printStackTrace();
+//                e1.printStackTrace();
             }
         }
         try
@@ -396,7 +396,7 @@ public class RuntimeMotionInjector {
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 	}
 }

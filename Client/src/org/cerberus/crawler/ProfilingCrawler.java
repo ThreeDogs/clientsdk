@@ -5,10 +5,14 @@
 
 package org.cerberus.crawler;
 
-import android.util.Log;
-import java.io.PrintStream;
+import org.cerberus.index.CerberusAPI;
 import org.cerberus.profile.cpu.CpuDump;
 import org.cerberus.profile.memory.MemoryDump;
+import org.cerberus.profile.network.NetworkDump;
+
+import edu.umich.PowerTutor.service.UMLoggerService;
+import android.content.Intent;
+import android.util.Log;
 
 public class ProfilingCrawler extends Thread {
 
@@ -36,6 +40,9 @@ public class ProfilingCrawler extends Thread {
         {
             CpuDump.getCpuTrace();
             MemoryDump.getMemoryTrace();
+            NetworkDump.getNetworkTrace();
+            CerberusAPI.c.startService(new Intent(CerberusAPI.c, UMLoggerService.class));
+            
             Log.i("cerberus", (new StringBuilder()).append(System.currentTimeMillis()).append(" profiling...").toString());
             try
             {
@@ -55,8 +62,10 @@ public class ProfilingCrawler extends Thread {
 
     public void stopThread()
     {
-        if(thisThread != null)
+        if(thisThread != null) {
             inturuptFlag = 1;
+            CerberusAPI.c.stopService(new Intent(CerberusAPI.c, UMLoggerService.class));
+        }
     }
 
     

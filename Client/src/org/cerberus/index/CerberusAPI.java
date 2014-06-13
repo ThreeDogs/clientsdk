@@ -19,9 +19,12 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.cerberus.crawler.ProfilingCrawler;
 import org.cerberus.event.collection.MotionCollector;
+import org.cerberus.profile.battery.BatteryDataList;
 import org.cerberus.profile.cpu.CpuDataList;
 import org.cerberus.profile.crash.CrashDump;
+import org.cerberus.profile.drawtime.FrameDrawTimeDumpList;
 import org.cerberus.profile.memory.MemoryDataList;
+import org.cerberus.profile.network.NetworkDataList;
 import org.cerberus.scenario.MotionVO;
 import org.cerberus.scenario.NetworkMotionStream;
 import org.cerberus.service.AlwaysTopButtonService;
@@ -41,7 +44,7 @@ public class CerberusAPI {
     public static final int STATUS_RUNNING = 1;
     public static final int STATUS_FINISH = 0;
     public static Integer status_ = Integer.valueOf(0);
-    private Context c;
+    public static Context c;
     public static String apiKey;
     private Thread.UncaughtExceptionHandler mUncaughtExceptionHandler;
     public static int index = 0x1000;
@@ -72,6 +75,7 @@ public class CerberusAPI {
 		this.apiKey = apiKey;
 		this.isRecording = isRecording;
 	}
+	
 	
 	public void start() {
 		
@@ -148,6 +152,13 @@ public class CerberusAPI {
           	        }
           	        resultData.put("memory_infos_attributes", memoryList);
           	        
+          	      resultData.put("battery_infos_attributes", BatteryDataList.getInstance());
+      	        
+      	        resultData.put("network_infos_attributes", NetworkDataList.getInstance());
+      	        
+      	      resultData.put("frame_draw_times_attributes", FrameDrawTimeDumpList.getInstance());
+  	        
+          	        
           	        List motionList = new ArrayList();
           	        for(MotionVO motion : ((NetworkMotionStream)MotionCollector.getInstance().getStream()).getMotionList()) {
           	        	
@@ -165,7 +176,7 @@ public class CerberusAPI {
           	        
           	        resultData.put("motion_event_infos_attributes", motionList);
           	        resultData.put("app_version", version);
-          	        resultData.put("test_datetime", startDate);
+//          	        resultData.put("test_datetime", startDate);
           	        resultData.put("running_time", finishDate-startDate);
           	        resultData.put("device_key", serial);
           	        resultData.put("test_scenario_id", totalScenarioId);

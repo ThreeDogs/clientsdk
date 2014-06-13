@@ -12,7 +12,9 @@ public class CpuDump {
 
 	private static int count = 0;
 	public static void getCpuTrace() {
-	
+
+		// CpuDump$1.class
+		// profiling.org.cerberus.jarasm.JarAsmTest.java
 		new Runnable() {
 
 			@Override
@@ -45,6 +47,11 @@ public class CpuDump {
 				        		}
 				        		
 				        		String usage = line.split(" ")[3];
+				        		
+				        		if(usage.equals("S") || usage.equals("R")) {
+				        			usage = line.split(" ")[2];
+				        		}
+				        		
 //				        		data.put("id", count++);
 				        		data.put("usage", usage);
 				        		data.put("client_timestamp", System.currentTimeMillis());
