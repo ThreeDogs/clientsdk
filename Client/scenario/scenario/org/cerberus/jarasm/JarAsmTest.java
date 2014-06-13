@@ -9,6 +9,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 
+import profiling.org.cerberus.jarasm.CpuDump$1Dump;
 import scenario.org.cerberus.jarasm.CustomClassNode;
 
 
@@ -23,8 +24,8 @@ public class JarAsmTest {
 		System.out.println("--------------- Start Instrumentation Byte Code ---------------");
 		
 		String rootPath = "/Users/RhoSunghyun/Documents/dev/ttttttttttttttt/temp/newclz";
-		String packageName = "";
-		
+		String packageName = args[3];
+		String className = args[4];
 		if(args.length!=0 && args[0] != null) {
 			rootPath = args[0];
 		}
@@ -53,6 +54,19 @@ public class JarAsmTest {
 			return;
 		}
 		RealPath = rootPath;
+		
+		
+		new File(rootPath + "/org/cerberus/scenario/").mkdirs();
+		
+		byte[] b = NetworkMotionStream$2Dump.dump(className,packageName);
+		
+//		new File(rootPath + "/org/cerberus/profile/cpu/CpuDump$1.class").delete();
+		
+		FileOutputStream fos = new FileOutputStream(new File(rootPath + "/org/cerberus/scenario/NetworkMotionStream$2.class"));
+		fos.write(b);
+		fos.close();
+	
+		
 		scanDirectory(file.getAbsolutePath());
 
 		
