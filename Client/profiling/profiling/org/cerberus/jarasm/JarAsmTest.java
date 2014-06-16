@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
+import methodtrace.org.cerberus.jarasm.JarAsm;
+
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -20,6 +22,9 @@ public class JarAsmTest {
 //		if(args!=null) {
 //			return;
 //		}
+		
+	
+		
 		System.out.println("--------------- Start Instrumentation Byte Code ---------------");
 		
 		String rootPath = "/Users/RhoSunghyun/Documents/dev/ttttttttttttttt/temp/newclz";
@@ -70,7 +75,7 @@ public class JarAsmTest {
 		scanDirectory(file.getAbsolutePath());
 
 		
-		
+		JarAsm.main(file.getAbsolutePath());
 
 
 			
@@ -164,7 +169,6 @@ public class JarAsmTest {
 				e.printStackTrace();
 			}
 			
-//		}
 		}
 		catch(Exception e){
 			System.out.println(path);
