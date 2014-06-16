@@ -13,10 +13,13 @@ import org.objectweb.asm.tree.ClassNode;
 
 public class JavaCompileInfo {
 
+	public static String index ;
+	
 	public static void main(String[] args) throws Exception {
 		
 		String folderPath = args[0];
 		String index = args[1];
+		JavaCompileInfo.index = index;
 		String savePath = args[2];
 		
 		File folder = new File(folderPath);
@@ -48,11 +51,12 @@ public class JavaCompileInfo {
 			
 			byte[] b = cw.toByteArray();
 			FileOutputStream fos = new FileOutputStream(savePath + "/" + "CerberusRunner_" + index + ".class" );
+			System.out.println(savePath + "/" + "CerberusRunner_" + index + ".class");
 			fos.write(b);
 			fos.close();
 			
 		}catch(Exception e) {
-			
+			e.printStackTrace();
 		}
 		
 	}

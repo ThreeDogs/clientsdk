@@ -18,7 +18,16 @@ public class SetupAdviceAdapter extends AdviceAdapter{
 		mv.visitMethodInsn(INVOKESPECIAL, "org/cerberus/test/CerberusTestRunner", "setUp", "()V");
 	}
 
+	@Override
+	public void visitFieldInsn(int opcode, String owner, String name,
+			String desc) {
 
+		if(name.equals("solo") && owner.equals("org/cerberus/test/CerberusTestRunner")) {
+			owner = "org/cerberus/test/CerberusRunner_" + JavaCompileInfo.index;
+		}
+		
+		super.visitFieldInsn(opcode, owner, name, desc);
+	}
 	
 	
 	
